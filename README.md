@@ -8,7 +8,7 @@ We will be working through the tasks located in each week's folder, to:
 
 The basic workflow for FRC vision is Good Image, Good Mask and good Math.  Let's call this "GIGMM"!  An acronym to remember the workflow.
 
-We will not need a robot, or specific hardware, other than a computer with Python and OpenCV.
+We will not need a robot, or specific hardware, other than a computer with Python, OpenCV and VSCode.
 
 Merge Robotics, November 2020
 
