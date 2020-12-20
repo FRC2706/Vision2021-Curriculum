@@ -5,3 +5,9 @@
 # Please paste the found links into this file below, but in your cloned repository
 
 # Choose a few images found online, say 10 to 15 and create a sub-folder in your cloned repository
+
+#https://docs.wpilib.org/en/stable/_images/original-image.png
+
+#https://docs.wpilib.org/en/stable/docs/software/vision-processing/introduction/identifying-and-processing-the-targets.html
+
+#https://docs.wpilib.org/en/stable/docs/software/vision-processing/introduction/identifying-and-processing-the-targets.html
