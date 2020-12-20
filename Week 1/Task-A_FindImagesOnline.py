@@ -5,3 +5,4 @@
 # Please paste the found links into this file below, but in your cloned repository
 
 # Choose a few images found online, say 10 to 15 and create a sub-folder in your cloned repository
+https://usfirst.collab.net/sf/frs/do/viewRelease/projects.wpilib/frs.sample_programs.2017_c_java_vision_sample
