@@ -14,11 +14,12 @@
 import numpy as np
 import cv2
 # define a string variable for the path to the file
-a = r"C:\Users\Jamie Diep\Documents\frc2021\Vision Images\LED Peg\1ftH1ftD0Angle0Brightness.jpg"
-print (a)
+a = [r"C:\Users\Jamie Diep\Documents\frc2021\Vision Images\LED Peg\1ftH1ftD0Angle0Brightness.jpg",r"C:\Users\Jamie Diep\Documents\frc2021\My images\1ftH1ftD0Angle0Brightness.jpg"]
+b = r"C:\Users\Jamie Diep\Documents\frc2021\My images\1ftH1ftD0Angle0Brightness.jpg"
+print (b)
 
 # load a color image using string
-img = cv2.imread(a,cv2.IMREAD_COLOR)
+img = cv2.imread(b,cv2.IMREAD_COLOR)
 
 # display the color image to screen
 cv2.imshow('image',img)
