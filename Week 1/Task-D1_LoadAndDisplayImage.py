@@ -11,14 +11,21 @@
 
 # Imports!
 # Python - import modules of code as required (OpenCV here)
+import numpy as np
+import cv2
 
 # define a string variable for the path to the file
+strPathName = 'Week 1/'
+strImageFilename = '2016-stonghold-high-tower-goal.png'
 
 # load a color image using string
+imgImageInput = cv2.imread(strPathName + strImageFilename)
 
 # display the color image to screen
+cv2.imshow('This is the window name', imgImageInput)
 
 # wait for user input to close
+cv2.waitKey(0)
 
 # cleanup and exit
-
+cv2.destroyAllWindows()
