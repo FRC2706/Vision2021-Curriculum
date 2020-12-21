@@ -9,16 +9,19 @@
 
 # To help we have comments to prompt how to do this is below
 
-# Imports!
-# Python - import modules of code as required (OpenCV here)
+import numpy as np
+import cv2
 
-# define a string variable for the path to the file
+str_path_name = 'Week 1/'
+img_1_name = 'Vision_Basketball_Targets.png'
 
-# load a color image using string
+img_1_input = cv2.imread(str_path_name + img_1_name)
+print('img_1_imput')
 
-# display the color image to screen
+cv2.imshow('image window name',img_1_input)
 
-# wait for user input to close
+cv2.waitKey(0)
 
-# cleanup and exit
+cv2.destroyAllWindows()
 
+print('hello')
