@@ -19,10 +19,10 @@ strPathName = 'Week 1/'
 strImageFilename = '2016-stonghold-high-tower-goal.png'
 
 # load a color image using string
-imgImageInput = cv2.imread(strPathName + strImageFilename)
+bgrOriginal = cv2.imread(strPathName + strImageFilename)
 
 # display the color image to screen
-cv2.imshow('This is the window name', imgImageInput)
+cv2.imshow('This is the window name', bgrOriginal)
 
 # wait for user input to close
 cv2.waitKey(0)

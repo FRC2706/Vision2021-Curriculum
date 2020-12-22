@@ -18,24 +18,24 @@ strPathName = 'Week 1/'
 strImageFilename = '2016-stonghold-high-tower-goal.png'
 
 # load a color image using string
-imgImageInput = cv2.imread(strPathName + strImageFilename)
+bgrOriginal = cv2.imread(strPathName + strImageFilename)
 
 # display the color image to screen
-cv2.imshow('This is the original image', imgImageInput)
+cv2.imshow('This is the original image', bgrOriginal)
 
 # mask the image to only show yellow or green images
 # Convert RGB(BGR) to HSV
-imgImageInHSV = cv2.cvtColor(imgImageInput, cv2.COLOR_BGR2HSV)
+hsvOriginal = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
 # define a range of green in HSV
-lower_green = np.array([55,220,220])
-upper_green = np.array([65,255,255]) 
+colLowerGreen = np.array([55,220,220])
+colUpperGreen = np.array([65,255,255]) 
 # threshold the HSV image to get only green color
-imgImageBinaryMask = cv2.inRange(imgImageInHSV, lower_green, upper_green)
+mskBinary = cv2.inRange(hsvOriginal, colLowerGreen, colUpperGreen)
 # create a full color mask
 
 
 # display the masked images to screen
-cv2.imshow('This is the Binary mask', imgImageBinaryMask)
+cv2.imshow('This is the Binary mask', mskBinary)
 
 # wait for user input to close
 cv2.waitKey(0)
