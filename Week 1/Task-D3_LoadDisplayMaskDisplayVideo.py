@@ -61,9 +61,13 @@ while(True):
     # threshold the HSV image to get only green color
     mskBinary = cv2.inRange(hsvOriginal, arrLowerColor, arrUpperColor)
 
+    # Bitwise-AND binary mask and original image
+    mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
+
     # display the masked images to screen
     cv2.imshow('This is the Binary mask', mskBinary)
-    
+    cv2.imshow('This is the Colour mask', mskColor)
+
     # check for user input to exit loop and if not return to top of loop
     k = cv2.waitKey(1) & 0xFF
     if k == ord('q') or k == 27:

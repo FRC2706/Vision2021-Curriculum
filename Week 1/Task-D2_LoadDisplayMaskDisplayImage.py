@@ -32,10 +32,12 @@ colUpperGreen = np.array([65,255,255])
 # threshold the HSV image to get only green color
 mskBinary = cv2.inRange(hsvOriginal, colLowerGreen, colUpperGreen)
 # create a full color mask
-
+# Bitwise-AND binary mask and original image
+mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
 
 # display the masked images to screen
 cv2.imshow('This is the Binary mask', mskBinary)
+cv2.imshow('This is the Colour mask', mskColor)
 
 # wait for user input to close
 while(True):
