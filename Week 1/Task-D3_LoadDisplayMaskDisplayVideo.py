@@ -20,6 +20,11 @@ while(True):
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     cv2.imshow('frame2',frame)
+    cv2.imshow('frame3',frame)
+    cv2.imshow('frame1',frame)
+    cv2.imshow('frame4',frame)
+    cv2.imshow('frame5',frame)
+    cv2.imshow('frame6',frame)
     cv2.imshow('frame',gray)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
