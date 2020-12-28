@@ -38,7 +38,10 @@ mskBinary = cv2.inRange(hsvOriginal, colLowerGreen, colUpperGreen)
 cv2.imshow('This is the Binary mask', mskBinary)
 
 # wait for user input to close
-cv2.waitKey(0)
+while(True):
+    k = cv2.waitKey(1) & 0xFF
+    if k == ord('q') or k == 27:
+        break
 
 # cleanup and exit
 cv2.destroyAllWindows()
