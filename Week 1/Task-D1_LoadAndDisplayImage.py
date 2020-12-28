@@ -11,7 +11,7 @@
 
 # Imports!
 # Python - import modules of code as required (OpenCV here)
-import numpy as numpy
+import numpy as np
 import cv2
 
 # define a string variable for the path to the file
