@@ -10,13 +10,15 @@
 
 # Imports!
 # Python - import modules of code as required (OpenCV here)
-
+import numpy as np
+import cv2
 # define a string variable for the path to the file
-
+strPathName = 'Week 1/'
+strImgPath = "2016-stonghold-high-tower-goal.png"
 # load a color image using string
-
+imgImageInput = cv2.imread(strPathName+strImgPath)
 # display the color image to screen
-
+cv2.imshow("Original Image",imgImageInput)
 # mask the image to only show yellow or green images
 
 # display the masked images to screen

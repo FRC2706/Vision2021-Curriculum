@@ -20,7 +20,7 @@ strImgPath = "2016-stonghold-high-tower-goal.png"
 imgImageInput = cv2.imread(strPathName+strImgPath)
 # display the color image to screen
 cv2.imshow("windowName", imgImageInput)
-printf(imgImageInput)
+print(imgImageInput)
 # wait for user input to close
 cv2.waitKey(0)
 # cleanup and exit
