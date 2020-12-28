@@ -10,10 +10,22 @@
 
 # Imports!
 # Python - import modules of code as required (OpenCV here)
-
+import numpy as np
+import cv2
 # define the camera
+cap = cv2.VideoCapture(0)
 
 # setup loop
+while(True):
+    ret, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame2',frame)
+    cv2.imshow('frame',gray)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
 
 # load a color image from camera
 
