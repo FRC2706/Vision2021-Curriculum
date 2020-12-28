@@ -18,6 +18,8 @@ strImageFilename = r"C:\Users\Jamie Diep\Documents\frc2021\My images\1ftH1ftD0An
 img = cv2.imread(strImageFilename)
 # display the color image to screen
 cv2.imshow('Color Image',img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 # mask the image to only show yellow or green images
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 mask = cv2.inRange(hsv, (36, 25, 25), (70, 255,255))
