@@ -30,9 +30,9 @@
 
 # sort the array of Contours by area
 
-# calculate the distance to the target, assumed to be largest contour
+# draw circle at centroid of target on colour mask, and known distance to target as text
 
-# draw circle at centroid of target on colour mask, and distance to target as text
+# calculate the vision distance to the target, assumed to be largest contour
 
 # display the colour mask image to screen
 
