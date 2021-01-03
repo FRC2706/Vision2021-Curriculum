@@ -16,11 +16,13 @@ import cv2
 # define a string variable for the path to the file
 strPathName = "Week 1/"
 strImageFileName = './pictures/RetroTape.jpg'
+#strImageFileName = '2016-stonghold-high-tower-goal.png'
 # load a color image using string
-imgImageInput = cv2.imread(strPathName + strImageFileName, 0)
+imgImageInput = cv2.imread(strPathName + strImageFileName)
 
 # display the color image to screen
 cv2.imshow('This is the original image',imgImageInput)
+
 
 # mask the image to only show yellow or green images
 # Convert RGB(BGR) to HSV
@@ -34,7 +36,7 @@ imgImageBinaryMask = cv2.inRange(imgImageInHSV, lower_green, upper_green)
 
 
 # display the masked images to screen
-cv2.imshow('This is the Binary mask',imgImageMasked)
+cv2.imshow('This is the Binary mask',imgImageBinaryMask)
 
 # wait for user input to close
 cv2.waitKey(0)
