@@ -19,13 +19,40 @@ cap = cv2.VideoCapture(0)
 while(True):
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    cv2.imshow('frame2',frame)
-    cv2.imshow('frame3',frame)
-    cv2.imshow('frame1',frame)
-    cv2.imshow('frame4',frame)
-    cv2.imshow('frame5',frame)
-    cv2.imshow('frame6',frame)
-    cv2.imshow('frame',gray)
+    ret, thresh = cv2.threshold(gray, 127, 255, 0)
+    
+    #Show Binary Thresh image with contour
+    ret,thresh1 = cv2.threshold(frame,127,255,cv2.THRESH_BINARY)
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(thresh1, contours, -1, (255,0,255), 2)
+    cv2.imshow('Binary',thresh1)
+    
+    #Show Canny
+    edge = cv2.Canny(gray,30,100)
+    cv2.imshow('Canny edge', edge)
+    
+    #Show Binary Inverse Thresh image
+    ret,thresh2 = cv2.threshold(frame,127,255,cv2.THRESH_BINARY_INV)
+    cv2.imshow('Binary inversion',thresh2)
+
+    #Show Trunc Thresh image
+    ret,thresh3 = cv2.threshold(frame,127,255,cv2.THRESH_TRUNC)
+    cv2.imshow('Trunc',thresh3)
+
+    #Show ToZero Thresh image
+    ret,thresh4 = cv2.threshold(frame,127,255,cv2.THRESH_TOZERO)
+    cv2.imshow('ToZero',thresh4)
+
+    #Show ToZero inversion image
+    ret,thresh5 = cv2.threshold(frame,127,255,cv2.THRESH_TOZERO_INV)
+    cv2.imshow('ToZero inversion',thresh5)
+
+    #Show Original Image with Contour
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(frame, contours, -1, (243,96,92), 2)
+    cv2.imshow('Original',frame)
+
+    #Exit loop
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
