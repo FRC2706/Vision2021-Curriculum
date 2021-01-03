@@ -15,7 +15,7 @@ import cv2
 
 # NEW - Constants for various purposes...
 # for Camera number, when using more than one, generally, 0 is my laptop camera, 1 is first usb webcam found
-intCameraNumber = 1
+intCameraNumber = 0
 
 # colors for screen information
 colRgbBlue = (255, 0, 0)
