@@ -20,10 +20,11 @@ imgImageInput = cv2.imread(strPathName+strImgPath)
 # display the color image to screen
 cv2.imshow("Original Image",imgImageInput)
 # mask the image to only show yellow or green images
-
+hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
+mask = cv2.inRange(hsv, (36,25,25), (70,255,255))
 # display the masked images to screen
-
+cv2.imshow('Mask Added', mask)
 # wait for user input to close
-
+cv2.waitkey(0)
 # cleanup and exit
-
+cv2.destroyAllWindows()
