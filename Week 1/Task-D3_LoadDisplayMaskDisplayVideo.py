@@ -26,9 +26,12 @@ while(True):
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(thresh1, contours, -1, (255,0,255), 2)
     cv2.imshow('Binary',thresh1)
+
+    #Show Gray image
+    cv2.imshow('Gray Image', gray)
     
     #Show Canny
-    edge = cv2.Canny(gray,30,100)
+    edge = cv2.Canny(gray,35,100)
     cv2.imshow('Canny edge', edge)
     
     #Show Binary Inverse Thresh image
@@ -37,6 +40,8 @@ while(True):
 
     #Show Trunc Thresh image
     ret,thresh3 = cv2.threshold(frame,127,255,cv2.THRESH_TRUNC)
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(thresh3, contours, -1, (235,193,148), 2)
     cv2.imshow('Trunc',thresh3)
 
     #Show ToZero Thresh image
@@ -49,7 +54,7 @@ while(True):
 
     #Show Original Image with Contour
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(frame, contours, -1, (243,96,92), 2)
+    cv2.drawContours(frame, contours, -1, (72,34,159), 2)
     cv2.imshow('Original',frame)
 
     #Exit loop
