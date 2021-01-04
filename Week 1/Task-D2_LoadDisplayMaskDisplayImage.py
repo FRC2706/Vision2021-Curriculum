@@ -27,6 +27,11 @@ img_2_binary_mask = cv2.inRange(img_2_in_hsv, low_green_2, high_green_2)
 cv2.imshow('masked image 1',img_1_binary_mask)
 cv2.imshow('masked image 2',img_2_binary_mask)
 
-cv2.waitKey(0)
+#gray = cv.cvtColor(img_2_binary_mask, cv.COLOR_BGR2GRAY)
 
+#ret, thresh = cv.threshold(gray, 127, 255, 0)
+
+#cv2.imshow('masked image 2 contours',thresh)
+
+cv2.waitKey(0)
 cv2.destroyAllWindows()
