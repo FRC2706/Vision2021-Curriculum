@@ -23,10 +23,10 @@ colRgbGreen = (0 , 255, 0)
 colRgbRed = (0, 0, 255)
 
 # choose Lower and Upper colors, and exposures based on Camera selected above
-if intCameraNumber == 1:
+if intCameraNumber == 0:
     colHsvLowerGreen = (45, 30, 127)
     colHsvUpperGreen = (85, 255, 255)
-elif intCameraNumber == 0:
+elif intCameraNumber == 1:
     colHsvLowerGreen = (60, 60, 70)
     colHsvUpperGreen = (100, 255, 255)
 
@@ -35,12 +35,12 @@ elif intCameraNumber == 0:
 # 0 is my laptop camera, 1 is first usb webcam found
 cap = cv2.VideoCapture(intCameraNumber + cv2.CAP_DSHOW)
 
-if intCameraNumber == 1:
+if intCameraNumber == 0:
     pass
-elif intCameraNumber == 0:
+elif intCameraNumber == 1:
     cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25) # turns off auto exposure
     cap.set(cv2.CAP_PROP_EXPOSURE, -8) # turns exposure to seconds based on power of 2, so negative is a small duration
-    
+
 # setup loop
 while(True):
 
@@ -61,12 +61,8 @@ while(True):
     # threshold the HSV image to get only green color
     mskBinary = cv2.inRange(hsvOriginal, arrLowerColor, arrUpperColor)
 
-    # Bitwise-AND binary mask and original image
-    mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
-
     # display the masked images to screen
     cv2.imshow('This is the Binary mask', mskBinary)
-    cv2.imshow('This is the Colour mask', mskColor)
 
     # check for user input to exit loop and if not return to top of loop
     k = cv2.waitKey(1) & 0xFF
