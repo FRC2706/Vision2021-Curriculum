@@ -34,7 +34,7 @@ while(True):
     cv2.imshow('original', frame)
 
 # mask the image to only show yellow or green images
-
+f
 # display the masked images to screen
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     cv2.imshow('frame',gray)
