@@ -34,6 +34,7 @@ lower_green = np.array([55,220,220])
 upper_green = np.array([65,255,255])
 
 # threshold the HSV image to get only green color, all other colors will be blacked out
+# green color = white (1, true); other colors = black (0, false)
 imgImageBinaryMask = cv2.inRange(imgImageInHSV, lower_green, upper_green)
 
 # create a full color mask

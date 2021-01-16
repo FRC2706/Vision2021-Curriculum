@@ -56,19 +56,23 @@ while not(flgExit):
 
     # load a color image using the string and array
     bgrOriginal = cv2.imread(strPathName + arrImageFiles[intCounter])
+    cv2.imshow('original image', bgrOriginal)
 
     # mask the image to only show yellow or green images
     hsvOriginal = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
-    
+        
     # define a range of from upper to lower in HSV
     arrLowerColor = np.array([colHsvLowerGreen])
     arrUpperColor = np.array([colHsvUpperGreen]) 
     
     # threshold the HSV image to get only green color
+    # NOTE: filtered color = white; others = black
     mskBinary = cv2.inRange(hsvOriginal, arrLowerColor, arrUpperColor)
+    cv2.imshow('binary mask',mskBinary)
 
     # create a full color mask
     # Bitwise-AND binary mask and original image
+    # NOTE: 1 = white; 0 = black;
     mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
 
     # display the colour mask image to screen
@@ -76,16 +80,23 @@ while not(flgExit):
 
     # wait for user input to move or close
     while(True):
+        # stop the program until you input a key
         ke = cv2.waitKeyEx(0)
+        # Key code is implementation specific and depends on used backend: QT/GTK/Win32
+        # ke is the ASCII value of the key
+        # for windows arrows,  Left: 2424832 Up: 2490368 Right: 2555904 Down: 2621440
         if ke == 113 or ke == 27:
+            # exit at 'q' or 'esc'
             flgExit = True
             break
         if ke == 105 or ke == 2490368:
+            # back loop at 'i' or upper arrow
             intCounter = intCounter - 1
             if intCounter < 0: 
                 intCounter = len(arrImageFiles) - 1
             break
         if ke == 109 or ke == 2621440:
+            # forward loop at 'm' or down arrow
             intCounter = intCounter + 1
             if intCounter > len(arrImageFiles) - 1:
                 intCounter = 0
