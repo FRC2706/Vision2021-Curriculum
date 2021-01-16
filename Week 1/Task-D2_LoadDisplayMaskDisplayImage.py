@@ -17,26 +17,33 @@ import cv2
 strPathName = "Week 1/"
 strImageFileName = './pictures/RetroTape.jpg'
 #strImageFileName = '2016-stonghold-high-tower-goal.png'
+
 # load a color image using string
 imgImageInput = cv2.imread(strPathName + strImageFileName)
 
 # display the color image to screen
 cv2.imshow('This is the original image',imgImageInput)
 
-
 # mask the image to only show yellow or green images
-# Convert RGB(BGR) to HSV
+# Convert RGB(BGR) to HSV (NOTE: python use BGR)
 imgImageInHSV = cv2.cvtColor(imgImageInput, cv2.COLOR_BGR2HSV)
+
 # define a range of green in HSV
+# NOTE: in python, hue is only half in range.
 lower_green = np.array([55,220,220])
 upper_green = np.array([65,255,255])
-# threshold the HSV image to get only green color
-imgImageBinaryMask = cv2.inRange(imgImageInHSV, lower_green, upper_green)
-# create a full color mask
 
+# threshold the HSV image to get only green color, all other colors will be blacked out
+imgImageBinaryMask = cv2.inRange(imgImageInHSV, lower_green, upper_green)
+
+# create a full color mask
+# perform a bit-wise and operation of imgImageInput and imgImageBinaryMask. 
+# Then all green color will be true (white), other colors will be false (black) 
+mskColor = cv2.bitwise_and(imgImageInput, imgImageInput, mask=imgImageBinaryMask)
 
 # display the masked images to screen
 cv2.imshow('This is the Binary mask',imgImageBinaryMask)
+cv2.imshow('This is the color mask',mskColor)
 
 # wait for user input to close
 cv2.waitKey(0)

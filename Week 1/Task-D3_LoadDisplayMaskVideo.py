@@ -16,23 +16,40 @@
 import numpy as np
 import cv2
 
+#define color constants using BGR
+colBgrBlue = (255, 0, 0)
+colBgrGreen = (0, 255, 0)
+colBgrRed = (0, 0, 255)
+
 # define the camera
 # Create a video capture object
 cap = cv2.VideoCapture(0)
 
+#NOTE: use some retroTapeGreen to test
 # setup loop
 while(True):
-    # Capture frame-by-frame
+
+    # Capture frame-by-frame --> frame
     ret, frame = cap.read()
 
     # Our operations on the frame come here
     # mask the image to only show yellow or green images
-    #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #colorHSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    colorRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB )
+ 
+    # covert BGR to HSV
+    imgImageInHSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    # define a range of green in HSV
+    lower_green = np.array([55,220,220])
+    upper_green = np.array([65,255,255])
+    # threshold the HSV image to get only green color
+    imgImageBinaryMask = cv2.inRange(imgImageInHSV, lower_green, upper_green)
+    # perform bit-wise and operation to get the green color as white and other colors as black
+    mskColor = cv2.bitwise_and(frame, frame, mask=imgImageBinaryMask)
 
     # Display the resulting frame
-    cv2.imshow('frame',colorRGB)
+    cv2.imshow('original',frame)
+    cv2.imshow('color mask',imgImageBinaryMask)
+    cv2.imshow('binary mask',mskColor)
+    #cv2.imshow('frame', imgImageInHSV)
     
     # check for user input to exit loop and if not return to top of loop
     # Get out of the loop condition
