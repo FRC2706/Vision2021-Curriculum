@@ -20,7 +20,7 @@ while(True):
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(gray, 127, 255, 0)
-    cv2.putText(frame,'Hi, my name is Jamie!!',(50,50),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2,cv2.LINE_AA)
+    cv2.putText(frame,'Hello!!',(50,50),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2,cv2.LINE_AA)
     
     #Show Binary Thresh image with contour
     ret,thresh1 = cv2.threshold(frame,127,255,cv2.THRESH_BINARY)
