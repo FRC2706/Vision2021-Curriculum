@@ -1,22 +1,26 @@
 # This is a pseudo code file for Merge Robotics, 2021, Game Changers
 
-# This is task D5 - > Introduction to Contours and Distance Calculations
+# This is task F2 - > Introduction to Modules
 
-# Last task we looped through images with keyboard control, this time we will complicate life by introducing parts of Task G and H to measure distance from camera to a vision target
+# In task F we found an intersting techinique on the Knoxville github page including a function called 'hsvThreshold'
 
-# You can find answers to complete this task in the following links 
+# You can find their full file here with 'hsvThreshold' embedded as part of it.   
 # -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_drawing_functions/py_drawing_functions.html
 # -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_begin/py_contours_begin.html#contours-getting-started
 # -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.html#contour-area
 # -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.html#a-straight-bounding-rectangle
 # -> https://docs.wpilib.org/en/stable/docs/software/vision-processing/introduction/identifying-and-processing-the-targets.html?highlight=distance#measurements
 
-# To help we have comments to prompt how to do this is below
+# As an experiment let's try this method out by copying task D5 and modifying it to work with their function.
+# I understand that the proper Python terms for a function in a separate file is called a modules, so we will
+# also use a new folder called modules, a .py file called 'masking.py' as a chooser of sorts, with a sub folder
+# for code breakdown called maskers
 
 # Imports!
 # Python - import modules of code as required (OpenCV here)
 import numpy as np
 import cv2
+from masking import maskByColor
 
 # Constants!
 # colors for screen information
@@ -71,11 +75,12 @@ while not(flgExit):
     hsvOriginal = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
     
     # define a range of from upper to lower in HSV
-    arrLowerColor = np.array([colHsvLowerGreen], dtype='int32')
-    arrUpperColor = np.array([colHsvUpperGreen], dtype='int32') 
+    arrLowerColor = np.array(colHsvLowerGreen, dtype='int32')
+    arrUpperColor = np.array(colHsvUpperGreen, dtype='int32')
     
     # threshold the HSV image to get only green color
-    mskBinary = cv2.inRange(hsvOriginal, arrLowerColor, arrUpperColor)
+    mskBinary = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'ir')
+    mskBinary = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'kn')
 
     # create a full color mask
     # Bitwise-AND binary mask and original image
@@ -88,7 +93,7 @@ while not(flgExit):
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
     print('Found', len(contours), 'contours in this photo!')
     indiv = contours[0]
-    print (indiv)
+    #print (indiv)
 
     # draw circle at centroid of target on colour mask, and known distance to target as text
     cv2.drawContours(mskColor, [indiv], 0, colRgbPurple, 3)
