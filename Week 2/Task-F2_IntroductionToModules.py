@@ -38,26 +38,39 @@ strPathName = '2017-pegsAtDistance/'
 
 # define and fill an array with the names of images 
 arrImageFiles = []
-arrImageFiles.append('01dinf-pegs-14hiin.jpg')
-arrImageFiles.append('02dinf-pegs-14hiin.jpg')
-arrImageFiles.append('03dinf-pegs-14hiin.jpg')
-arrImageFiles.append('04dinf-pegs-14hiin.jpg')
-arrImageFiles.append('05dinf-pegs-14hiin.jpg')
-arrImageFiles.append('06dinf-pegs-14hiin.jpg')
-arrImageFiles.append('07dinf-pegs-14hiin.jpg')
-arrImageFiles.append('08dinf-pegs-14hiin.jpg')
-arrImageFiles.append('09dinf-pegs-14hiin.jpg')
-arrImageFiles.append('10dinf-pegs-14hiin.jpg')
-arrImageFiles.append('11dinf-pegs-14hiin.jpg')
-arrImageFiles.append('12dinf-pegs-14hiin.jpg')
-arrImageFiles.append('13dinf-pegs-14hiin.jpg')
-arrImageFiles.append('14dinf-pegs-14hiin.jpg')
-arrImageFiles.append('15dinf-pegs-14hiin.jpg')
-arrImageFiles.append('16dinf-pegs-14hiin.jpg')
-arrImageFiles.append('17dinf-pegs-14hiin.jpg')
-arrImageFiles.append('18dinf-pegs-14hiin.jpg')
-arrImageFiles.append('19dinf-pegs-14hiin.jpg')
-arrImageFiles.append('20dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('01dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('02dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('03dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('04dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('05dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('06dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('07dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('08dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('09dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('10dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('11dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('12dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('13dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('14dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('15dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('16dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('17dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('18dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('19dinf-pegs-14hiin.jpg')
+# arrImageFiles.append('20dinf-pegs-14hiin.jpg')
+
+if True:
+    strPathName = '2018-PowerUp-Problems/'
+
+    arrImageFiles = []
+    arrImageFiles.append('test-01.jpg')
+    arrImageFiles.append('test-02.jpg')
+    arrImageFiles.append('test-03.jpg')
+    arrImageFiles.append('test-04.jpg')
+    arrImageFiles.append('test-05.jpg')
+
+    colHsvLowerGreen = (30, 220, 100)
+    colHsvUpperGreen = (40, 255, 255)
 
 # setup loop
 flgExit = False
@@ -81,7 +94,7 @@ while not(flgExit):
 
     # display the binary masks image to screen
     cv2.imshow('This is the Binary mask - InRange', mskBinaryIr)
-    cv2.imshow('This is the Binary mask - InRange', mskBinaryIr)
+    cv2.imshow('This is the Binary mask - Knoxville', mskBinaryKn)
 
     # create a full color mask
     # Bitwise-AND binary mask and original image
@@ -99,7 +112,7 @@ while not(flgExit):
 
     # draw circle at centroid of target on colour mask, and known distance to target as text
     cv2.drawContours(mskColorKn, [indiv], 0, colRgbPurple, 3)
-    cv2.putText(mskColorKn, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) + ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
+    #cv2.putText(mskColorKn, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) + ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
     M = cv2.moments(indiv)
     cx = int(M['m10']/M['m00'])
     cy = int(M['m01']/M['m00'])
