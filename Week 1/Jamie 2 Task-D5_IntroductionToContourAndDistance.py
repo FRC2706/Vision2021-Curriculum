@@ -30,10 +30,9 @@ while not(flgExit):
     hsv = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
     arrLowerColor = np.array([colHsvLowerGreen])
     arrUpperColor = np.array([colHsvUpperGreen]) 
-    
-    mskBinary = cv2.inRange(hsvOriginal, arrLowerColor, arrUpperColor)
 
-    mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
+    mask = 
+
     
     while(True):
         ke = cv2.waitKeyEx(0)
