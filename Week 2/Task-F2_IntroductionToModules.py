@@ -5,11 +5,7 @@
 # In task F we found an intersting techinique on the Knoxville github page including a function called 'hsvThreshold'
 
 # You can find their full file here with 'hsvThreshold' embedded as part of it.   
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_drawing_functions/py_drawing_functions.html
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_begin/py_contours_begin.html#contours-getting-started
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.html#contour-area
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.html#a-straight-bounding-rectangle
-# -> https://docs.wpilib.org/en/stable/docs/software/vision-processing/introduction/identifying-and-processing-the-targets.html?highlight=distance#measurements
+# - https://github.com/Knoxville-FRC-alliance/Vision-2018-Python/blob/master/visionPi.py
 
 # As an experiment let's try this method out by copying task D5 and modifying it to work with their function.
 # I understand that the proper Python terms for a function in a separate file is called a modules, so we will
@@ -79,15 +75,21 @@ while not(flgExit):
     arrUpperColor = np.array(colHsvUpperGreen, dtype='int32')
     
     # threshold the HSV image to get only green color
-    mskBinary = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'ir')
-    mskBinary = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'kn')
+    mskBinaryIr = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'ir')
+    mskBinaryKn = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'kn')
+    mskBinary = mskBinaryKn.copy()
+
+    # display the binary masks image to screen
+    cv2.imshow('This is the Binary mask - InRange', mskBinaryIr)
+    cv2.imshow('This is the Binary mask - InRange', mskBinaryIr)
 
     # create a full color mask
     # Bitwise-AND binary mask and original image
-    mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
+    mskColorIr = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinaryIr)
+    mskColorKn = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinaryKn)
 
     # generate the array of Contours
-    contours, hierarchy = cv2.findContours(mskBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(mskBinaryKn, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     # sort the array of Contours by area
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
@@ -96,19 +98,20 @@ while not(flgExit):
     #print (indiv)
 
     # draw circle at centroid of target on colour mask, and known distance to target as text
-    cv2.drawContours(mskColor, [indiv], 0, colRgbPurple, 3)
-    cv2.putText(mskColor, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) + ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
+    cv2.drawContours(mskColorKn, [indiv], 0, colRgbPurple, 3)
+    cv2.putText(mskColorKn, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) + ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
     M = cv2.moments(indiv)
     cx = int(M['m10']/M['m00'])
     cy = int(M['m01']/M['m00'])
-    cv2.circle(mskColor, (cx,cy), 4, colRgbPurple, -1)
+    cv2.circle(mskColorKn, (cx,cy), 4, colRgbPurple, -1)
 
     # indicare the height of the found target, assumed to be largest contour
     ix, iy, iw, ih = cv2.boundingRect(indiv)
-    cv2.putText(mskColor, 'Target Height: ' + str(ih) + ' pixels', (20, 60), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
+    cv2.putText(mskColorKn, 'Target Height: ' + str(ih) + ' pixels', (20, 60), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
 
     # display the colour mask image to screen
-    cv2.imshow('This is the Colour mask', mskColor)
+    cv2.imshow('This is the Colour mask from InRange', mskColorKn)
+    cv2.imshow('This is the Colour mask from Knoxville', mskColorKn)
 
     # wait for user input to move or close
     while(True):

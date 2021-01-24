@@ -10,9 +10,9 @@ def maskByColor(hsvImage, LowColor, HighColor, Method):
         mskToReturn = maskByRange(hsvImage, LowColor, HighColor)
 
     elif Method == 'kn':
-        (hueMin, satMin, valMin) = LowColor
-        (hueMax, satMax, valMax) = HighColor
-        mskToReturn = hsvThreshold(hsvImage, hueMin, hueMax, satMin, satMax, valMin, valMax)
+        ([hueMin, satMin, valMin]) = LowColor
+        ([hueMax, satMax, valMax]) = HighColor
+        mskToReturn = hsvThreshold(hsvImage, int(hueMin), int(hueMax), int(satMin), int(satMax), int(valMin), int(valMax))
 
     elif Method == '':
         pass
