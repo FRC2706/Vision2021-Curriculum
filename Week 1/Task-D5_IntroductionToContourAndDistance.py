@@ -34,7 +34,7 @@ colHsvUpperGreen = (65, 255, 255)
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 # define a string variable for the path to the file
-strPathName = '2017-pegsAtDistance/'
+strPathName = 'Vision2021-Curriculum/2017-pegsAtDistance/'
 
 # define and fill an array with the names of images 
 arrImageFiles = []
