@@ -1,0 +1,27 @@
+# This is a pseudo code file for Merge Robotics, 2021, Game Changers
+
+# This is task J - > Create Testing Image from Code. With a series of tasks we are going to 
+# learn how to create our or function, sometimes called a method for our code.  The reason
+# for this is actually to simultaneously make our code easier to read and use, but more powerful
+# for future use as well
+
+# imports
+
+# constants
+
+# create empty bgr image for the test
+
+# draw a green rectangle on the test image
+
+# display the test image to verify it visually
+
+# convert image to hsv from bgr
+
+# using inrange from opencv make mask
+
+# display the mask to verify it visually
+
+# wait for user input to close
+
+# cleanup and exit
+
