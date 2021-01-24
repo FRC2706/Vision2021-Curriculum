@@ -30,10 +30,34 @@ while not(flgExit):
     hsv = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
     arrLowerColor = np.array([colHsvLowerGreen])
     arrUpperColor = np.array([colHsvUpperGreen]) 
-
-    mask = 
-
     
+    thresh = cv2.inRange(hsv, arrLowerColor,arrUpperColor)
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+    print('Found', len(contours), 'contours in this photo!')
+    indiv = contours[0]
+    print (indiv)
+    #cv2.drawContours(bgrOriginal, [indiv], 0, (255,0,0), 2)
+
+    #rect=cv2.minAreaRect(indiv)
+    #box = cv2.boxPoints(rect)
+    #box = np.int0(box)
+    ix, iy, iw, ih =cv2.boundingRect(indiv)
+    #cv2.drawContours(bgrOriginal,[box],0,(0,0,255),2)
+    cv2.imshow('oi', bgrOriginal)
+    print('Image heigh: ',ih)
+    #print(rect)
+    #width=(rect[1][0])
+    #print(width)
+    #height=(rect[1][1])
+    #print(height)
+    distance=int(arrImageFiles[intCounter][:2])*12
+    print(distance)
+    focalpoint=5.2
+    #RealDistance = (RealHeight*Focal length)/PixelHeight
+    CalculatedDistance = (14*145.8857)/ih
+    print('Calculated distance: ', CalculatedDistance)
+
     while(True):
         ke = cv2.waitKeyEx(0)
         if ke == 113 or ke == 27:
