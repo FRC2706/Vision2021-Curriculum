@@ -77,11 +77,10 @@ while not(flgExit):
     # threshold the HSV image to get only green color
     mskBinaryIr = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'ir')
     mskBinaryKn = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'kn')
-    mskBinary = mskBinaryKn.copy()
 
     # display the binary masks image to screen
     cv2.imshow('This is the Binary mask - InRange', mskBinaryIr)
-    cv2.imshow('This is the Binary mask - InRange', mskBinaryIr)
+    cv2.imshow('This is the Binary mask - Knoxville', mskBinaryKn)
 
     # create a full color mask
     # Bitwise-AND binary mask and original image
@@ -110,7 +109,7 @@ while not(flgExit):
     cv2.putText(mskColorKn, 'Target Height: ' + str(ih) + ' pixels', (20, 60), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
 
     # display the colour mask image to screen
-    cv2.imshow('This is the Colour mask from InRange', mskColorKn)
+    cv2.imshow('This is the Colour mask from InRange', mskColorIr)
     cv2.imshow('This is the Colour mask from Knoxville', mskColorKn)
 
     # wait for user input to move or close
