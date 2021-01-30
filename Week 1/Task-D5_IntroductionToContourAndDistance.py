@@ -26,7 +26,7 @@ colBgrRed = (0, 0, 255)
 colRgbYellow = (0, 255, 255)
 colRgbPurple = (255, 102, 153)
 
-# colors for HSV filtering
+# colors for HSV filtering: green
 colHsvLowerGreen = (55, 220, 220)
 colHsvUpperGreen = (65, 255, 255)
 
@@ -81,18 +81,20 @@ while not(flgExit):
     # Bitwise-AND binary mask and original image
     mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
 
-    # generate the array of Contours
+    # generate the array of Contours, based on the binary color image
     contours, hierarchy = cv2.findContours(mskBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     # sort the array of Contours by area
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
     print('Found', len(contours), 'contours in this photo!')
     indiv = contours[0]
-    print (indiv)
+    # Note: indiv is an array of points on the contour
+    ##print (indiv)
 
     # draw circle at centroid of target on colour mask, and known distance to target as text
     cv2.drawContours(mskColor, [indiv], 0, colRgbPurple, 3)
-    cv2.putText(mskColor, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) + ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
+
+    cv2.putText(mskColor, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) +  ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
     M = cv2.moments(indiv)
     cx = int(M['m10']/M['m00'])
     cy = int(M['m01']/M['m00'])
