@@ -1,22 +1,22 @@
 # This is a pseudo code file for Merge Robotics, 2021, Game Changers
 
-# This is task D5 - > Introduction to Contours and Distance Calculations
+# This is task F2 - > Introduction to Modules
 
-# Last task we looped through images with keyboard control, this time we will complicate life by introducing parts of Task G and H to measure distance from camera to a vision target
+# In task F we found an intersting techinique on the Knoxville github page including a function called 'hsvThreshold'
 
-# You can find answers to complete this task in the following links 
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_drawing_functions/py_drawing_functions.html
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_begin/py_contours_begin.html#contours-getting-started
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.html#contour-area
-# -> https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.html#a-straight-bounding-rectangle
-# -> https://docs.wpilib.org/en/stable/docs/software/vision-processing/introduction/identifying-and-processing-the-targets.html?highlight=distance#measurements
+# You can find their full file here with 'hsvThreshold' embedded as part of it.   
+# - https://github.com/Knoxville-FRC-alliance/Vision-2018-Python/blob/master/visionPi.py
 
-# To help we have comments to prompt how to do this is below
+# As an experiment let's try this method out by copying task D5 and modifying it to work with their function.
+# I understand that the proper Python terms for a function in a separate file is called a modules, so we will
+# also use a new folder called modules, a .py file called 'masking.py' as a chooser of sorts, with a sub folder
+# for code breakdown called maskers
 
 # Imports!
 # Python - import modules of code as required (OpenCV here)
 import numpy as np
 import cv2
+from masking import maskByColor
 
 # Constants!
 # colors for screen information
@@ -26,7 +26,7 @@ colBgrRed = (0, 0, 255)
 colRgbYellow = (0, 255, 255)
 colRgbPurple = (255, 102, 153)
 
-# colors for HSV filtering: green
+# colors for HSV filtering
 colHsvLowerGreen = (55, 220, 220)
 colHsvUpperGreen = (65, 255, 255)
 
@@ -71,41 +71,46 @@ while not(flgExit):
     hsvOriginal = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
     
     # define a range of from upper to lower in HSV
-    arrLowerColor = np.array([colHsvLowerGreen], dtype='int32')
-    arrUpperColor = np.array([colHsvUpperGreen], dtype='int32') 
+    arrLowerColor = np.array(colHsvLowerGreen, dtype='int32')
+    arrUpperColor = np.array(colHsvUpperGreen, dtype='int32')
     
     # threshold the HSV image to get only green color
-    mskBinary = cv2.inRange(hsvOriginal, arrLowerColor, arrUpperColor)
+    mskBinaryIr = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'ir')
+    mskBinaryKn = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'kn')
+
+    # display the binary masks image to screen
+    cv2.imshow('This is the Binary mask - InRange', mskBinaryIr)
+    cv2.imshow('This is the Binary mask - Knoxville', mskBinaryKn)
 
     # create a full color mask
     # Bitwise-AND binary mask and original image
-    mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
+    mskColorIr = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinaryIr)
+    mskColorKn = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinaryKn)
 
-    # generate the array of Contours, based on the binary color image
-    contours, hierarchy = cv2.findContours(mskBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # generate the array of Contours
+    contours, hierarchy = cv2.findContours(mskBinaryKn, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     # sort the array of Contours by area
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
     print('Found', len(contours), 'contours in this photo!')
     indiv = contours[0]
-    # Note: indiv is an array of points on the contour
-    ##print (indiv)
+    #print (indiv)
 
     # draw circle at centroid of target on colour mask, and known distance to target as text
-    cv2.drawContours(mskColor, [indiv], 0, colRgbPurple, 3)
-
-    cv2.putText(mskColor, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) +  ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
+    cv2.drawContours(mskColorKn, [indiv], 0, colRgbPurple, 3)
+    cv2.putText(mskColorKn, 'Real Dist: ' + str(int(arrImageFiles[intCounter][:2])) + ' ft', (20, 40), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
     M = cv2.moments(indiv)
     cx = int(M['m10']/M['m00'])
     cy = int(M['m01']/M['m00'])
-    cv2.circle(mskColor, (cx,cy), 4, colRgbPurple, -1)
+    cv2.circle(mskColorKn, (cx,cy), 4, colRgbPurple, -1)
 
     # indicare the height of the found target, assumed to be largest contour
     ix, iy, iw, ih = cv2.boundingRect(indiv)
-    cv2.putText(mskColor, 'Target Height: ' + str(ih) + ' pixels', (20, 60), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
+    cv2.putText(mskColorKn, 'Target Height: ' + str(ih) + ' pixels', (20, 60), font, 0.5, colRgbYellow, 1, cv2.LINE_AA)
 
     # display the colour mask image to screen
-    cv2.imshow('This is the Colour mask', mskColor)
+    cv2.imshow('This is the Colour mask from InRange', mskColorIr)
+    cv2.imshow('This is the Colour mask from Knoxville', mskColorKn)
 
     # wait for user input to move or close
     while(True):
