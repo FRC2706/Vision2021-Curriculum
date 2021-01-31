@@ -92,6 +92,11 @@ while not(flgExit):
     print('topmost: ', topmost)
     bottommost = tuple(indiv[indiv[:,:,1].argmax()][0])
     print('bottommost: ', bottommost)
+    cv2.circle(bgrOriginal, leftmost, 3, (0,0,255), -1)
+    cv2.circle(bgrOriginal, rightmost, 3, (0,255,0), -1)
+    cv2.circle(bgrOriginal, topmost, 3, (255,0,0), -1)
+    cv2.circle(bgrOriginal, bottommost, 3, (255,255,0), -1)
+    
     mask = np.zeros(gray.shape,np.uint8)
     #print('Matrix: ',mask)
     #print('end')
