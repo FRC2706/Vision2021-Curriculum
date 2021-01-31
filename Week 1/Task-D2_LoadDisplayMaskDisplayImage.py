@@ -15,7 +15,8 @@ import cv2
 
 # define a string variable for the path to the file
 strPathName = 'Week 1/'
-strImageFilename = '2016-stonghold-high-tower-goal.png'
+strImageFilename = './pictures/RetroTape.jpg'
+#strImageFilename = '2016-stonghold-high-tower-goal.png'
 
 # load a color image using string
 bgrOriginal = cv2.imread(strPathName + strImageFilename)
