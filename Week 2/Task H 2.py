@@ -72,27 +72,36 @@ while not(flgExit):
     x, y, w, h =cv2.boundingRect(indiv)
     area = cv2.contourArea(indiv)
     aspect_ratio = float(w)/h
+    print('Aspect Ratio:', aspect_ratio)
     rect_area = w*h
     extent = float(area)/rect_area
+    print('Extent: ',extent )
     hull = cv2.convexHull(indiv)
     hull_area = cv2.contourArea(hull)
     solidity = float(area)/hull_area
+    print('Solidity: ', solidity)
     area = cv2.contourArea(indiv)
     equi_diameter = np.sqrt(4*area/np.pi)
+    print('Equivalent Diameter: ', equi_diameter)
     (x,y),(MA,ma),angle = cv2.fitEllipse(indiv)
     leftmost = tuple(indiv[indiv[:,:,0].argmin()][0])
+    print('leftmost: ', leftmost)
     rightmost = tuple(indiv[indiv[:,:,0].argmax()][0])
+    print('rightmost: ', rightmost)
     topmost = tuple(indiv[indiv[:,:,1].argmin()][0])
+    print('topmost: ', topmost)
     bottommost = tuple(indiv[indiv[:,:,1].argmax()][0])
+    print('bottommost: ', bottommost)
     mask = np.zeros(gray.shape,np.uint8)
     #print('Matrix: ',mask)
     #print('end')
     cv2.drawContours(mask,[indiv],0,255,-1)
     pixelpoints = np.transpose(np.nonzero(mask))
-    #print(pixelpoints)
+    print(pixelpoints)
     #cv2.imshow('mask', mask)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(gray,mask=mask)
     mean_val = cv2.mean(bgrOriginal,mask = mask)
+    print(mean_val)
     cv2.imshow('oi', bgrOriginal)
 
     while(True):
