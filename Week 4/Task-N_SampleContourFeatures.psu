@@ -5,4 +5,4 @@
 # Over the weeks, we have explored ways to understand Contours visual and using
 # OpenCV functions.  Now lets put these to work and really get down to the 
 # challenge of finding FRC vision targets.  Basic idea is to loop through
-# sorted contours keeping desired contous only
+# sorted contours keeping desired contours only
