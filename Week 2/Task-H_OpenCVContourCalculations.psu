@@ -11,5 +11,15 @@
 # minimum enclosing circle, fitting elipse, fitting line, etc.
 
 # useful links
-# https://docs.opencv.org/4.5.0/dd/d49/tutorial_py_contour_features.html
 # https://docs.opencv.org/4.5.0/d1/d32/tutorial_py_contour_properties.html
+
+# 1 Aspect Ratio
+# 2 Extent
+# 3 Solidity
+# 4 Equivalent Diameter
+# 5 Orientation
+# 6 Mask and Pixel Points
+# 7 Maximum Value, Minimum Value and their locations
+# 8 Mean Color or Mean Intensity
+# 9 Extreme Points
+
