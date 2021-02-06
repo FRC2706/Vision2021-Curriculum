@@ -44,13 +44,12 @@ hsvOriginal = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
 arrLowerColor = np.array([colHsvLowerYellow], dtype='int32')
 arrUpperColor = np.array([colHsvUpperYellow], dtype='int32') 
     
-# threshold the HSV image to get only green color
+# threshold the HSV image to get only yellow color
 mskBinary = cv2.inRange(hsvOriginal, arrLowerColor, arrUpperColor)
 
 # create a full color mask
 # Bitwise-AND binary mask and original image
 mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
-
 
 # display the colour mask image to screen
 #cv2.imshow('This is the Colour mask', mskColor)
@@ -65,7 +64,7 @@ indiv = contours[0]
 #print (indiv)
 
 # draw circle at centroid of target on colour mask, and known distance to target as text
-cv2.drawContours(mskColor, [indiv], 0, colRgbPurple, 3)
+cv2.drawContours(mskColor, [indiv], 0, colRgbPurple, 1)
 M = cv2.moments(indiv)
 cx = int(M['m10']/M['m00'])
 cy = int(M['m01']/M['m00'])
@@ -76,21 +75,12 @@ cv2.imshow('This is the Colour mask', mskColor)
 
 # get the concour of the whole yellow picture
 # draw its centroid
-
 #for i=1:1:len(contours)
 #    indiv_contour = contours[i]
 #    leftmost = tuple(indiv_contour[indiv_contour[:,:,0].argmin()][0])
 #    rightmost = tuple(indiv_contour[indiv_contour[:,:,0].argmax()][0])
 #    topmost = tuple(indiv_contour[indiv_contour[:,:,1].argmin()][0])
 #    bottommost = tuple(indiv_contour[indiv_contour[:,:,1].argmax()][0])
-
-
-#get the hull of the contour
-#mskColor2 = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
-#hull = cv2.convexHull(indiv)
-#cv2.drawContours(mskColor2, [hull],  0,colRgbRed,3)
-#cv2.imshow('This is the hull', mskColor2)
-
 
 # wait for user input to move or close
 while(True):

@@ -27,9 +27,12 @@ import time
 colBgrBlue = (255, 0, 0)
 colBgrGreen = (0 , 255, 0)
 colBgrRed = (0, 0, 255)
+colBgrPurple = (153,102,255)
+
 colRgbYellow = (0, 255, 255)
 colRgbPurple = (255, 102, 153)
 colRgbGreen = (0,255,0)
+colRgbRed = (255,0,0)
 
 # colors for HSV filtering: green
 colHsvLowerGreen = (55, 220, 220)
@@ -64,46 +67,70 @@ while(True):
     # display the color image to screen
     cv2.imshow('This is the original gray image', imGray)
 
+    # find the contours
     ret, thresh_binary = cv2.threshold(imGray, 127,255, cv2.THRESH_BINARY)
     contours, hierarchy = cv2.findContours(thresh_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # draw all contours
+    cv2.drawContours(frame, contours, -1, colBgrGreen, 1)
+    cv2.imshow('all contours with THRESH_BINARY',frame)
 
-    cv2.drawContours(frame, contours, -1, colRgbGreen, 2)
-    cv2.imshow('This is THRESH_BINARY contours',frame)
-
-    #todo: filter the purple out
+    # only leave the green contours
     frameHsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    cv2.imshow('frameHsv',frameHsv)
+    #cv2.imshow('frameHsv',frameHsv)
     # define a range of green in HSV
     colLowerGreen = np.array(colHsvLowerGreen)
     colUpperGreen = np.array(colHsvUpperGreen) 
     # threshold the HSV image to get only green color
     mskBinary = cv2.inRange(frameHsv, colLowerGreen, colUpperGreen)
-    cv2.imshow('binary', mskBinary)
+    #cv2.imshow('binary', mskBinary)
     # create a full color mask
     # Bitwise-AND binary mask and original image
-    mskColor = cv2.bitwise_and(frameHsv, frameHsv, mask=mskBinary)
+    mskColor = cv2.bitwise_and(frame, frame, mask=mskBinary)
     cv2.imshow('the contours only', mskColor)
 
     # test with threshold types
     # note cv2.THRESH_BINARY = 0
     ret, thresh = cv2.threshold(imGray, 127, 255, 0)
-    cv2.imshow('1. THRESH_BINARY', thresh)
+    #cv2.imshow('1. THRESH_BINARY', thresh)
 
     ret, thresh_binary_inv = cv2.threshold(imGray, 127,255, cv2.THRESH_BINARY_INV)
     #cv2.imshow('2. THRESH_BINARY_INV',thresh_binary_inv)
-
     ret, thresh_toZero = cv2.threshold(imGray, 127,255, cv2.THRESH_TOZERO)
     #cv2.imshow('3. THRESH_TOZERO',thresh_toZero)
-
     ret, thresh_toZero_inv = cv2.threshold(imGray, 127,255, cv2.THRESH_TOZERO_INV)
     #cv2.imshow('4. This is THRESH_TOZERO_INV',thresh_toZero_inv)
 
+    # sort the array of Contours by area
+    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+    #print('Found', len(contours), 'contours in this photo!')
+    #print (indiv)
+    indiv = contours[0]
+    indiv1 = contours[1]
+    indiv2 = contours[2]
+    indiv3 = contours[3]
+    indiv4 = contours[4]
+    
+    # draw the centroid
 
+    # bounding rectangle
+    x,y,w,h = cv2.boundingRect(indiv1)
+    cv2.rectangle(mskColor,(x,y),(x+w,y+h),colBgrRed,3)
+    
+    # minimum enclosing circle
+    (x,y),radius = cv2.minEnclosingCircle(indiv2)
+    center = (int(x),int(y))
+    radius = int(radius)
+    cv2.circle(mskColor,center,radius,colBgrPurple,3)
+    
+    # fitting ellipse
+    ellipse = cv2.fitEllipse(indiv3)
+    cv2.ellipse(mskColor,ellipse,colBgrBlue,3)
 
+    #get the hull of the contour
+    hull = cv2.convexHull(indiv4)
+    cv2.drawContours(mskColor, [hull], 0,colBgrRed,3)
 
-    # display the colour mask image to screen
-    # cv2.imshow('This is the contours', imgray)
-
+    cv2.imshow('contour features', mskColor)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
