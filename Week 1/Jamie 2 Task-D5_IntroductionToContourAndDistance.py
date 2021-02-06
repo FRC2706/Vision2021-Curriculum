@@ -18,7 +18,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 #b = r"C:\Users\Jamie Diep\Documents\frc2021\My images"
 intCounter = 0
-strPathName = 'Vision2021-Curriculum/2017-pegsAtDistance/'
+strPathName = '2017-pegsAtDistance/'
 onlyfiles = [ f for f in listdir(strPathName) if isfile(join(strPathName,f))]
 arrImageFiles=[]
 flgExit = False
