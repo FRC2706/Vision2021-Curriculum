@@ -43,7 +43,7 @@ while not(flgExit):
     #box = cv2.boxPoints(rect)
     #box = np.int0(box)
     ix, iy, iw, ih =cv2.boundingRect(indiv)
-    cv2.drawContours(bgrOriginal,[box],0,(0,0,255),2)
+    #cv2.drawContours(bgrOriginal,[box],0,(0,0,255),2)
     cv2.imshow('oi', bgrOriginal)
     print('Image heigh: ',ih)
     #print(rect)
