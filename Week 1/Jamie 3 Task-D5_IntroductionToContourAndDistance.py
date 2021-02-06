@@ -10,15 +10,15 @@ colRgbYellow = (0, 255, 255)
 colRgbPurple = (255, 102, 153)
 
 # colors for HSV filtering
-colHsvLowerGreen = (55, 220, 220)
-colHsvUpperGreen = (65, 255, 255)
+colHsvLowerGreen = (5, 50, 50)
+colHsvUpperGreen = (15, 255, 255)
 
 # fonts for displaying text
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 #b = r"C:\Users\Jamie Diep\Documents\frc2021\My images"
 intCounter = 0
-strPathName = '2017-pegsAtDistance/'
+strPathName = 'Cones/'
 onlyfiles = [ f for f in listdir(strPathName) if isfile(join(strPathName,f))]
 arrImageFiles=[]
 flgExit = False
@@ -37,13 +37,13 @@ while not(flgExit):
     print('Found', len(contours), 'contours in this photo!')
     indiv = contours[0]
     print (indiv)
-    #cv2.drawContours(bgrOriginal, [indiv], 0, (255,0,0), 2)
+    cv2.drawContours(bgrOriginal, [indiv], 0, (255,0,0), 2)
 
     #rect=cv2.minAreaRect(indiv)
     #box = cv2.boxPoints(rect)
     #box = np.int0(box)
     ix, iy, iw, ih =cv2.boundingRect(indiv)
-    cv2.drawContours(bgrOriginal,[box],0,(0,0,255),2)
+    #cv2.drawContours(bgrOriginal,[box],0,(0,0,255),2)
     cv2.imshow('oi', bgrOriginal)
     print('Image heigh: ',ih)
     #print(rect)
@@ -51,9 +51,7 @@ while not(flgExit):
     #print(width)
     #height=(rect[1][1])
     #print(height)
-    distance=int(arrImageFiles[intCounter][:2])*12
-    print(distance)
-    focalpoint=5.2
+    #focalpoint=5.2
     #RealDistance = (RealHeight*Focal length)/PixelHeight
     CalculatedDistance = (14*145.8857)/ih
     print('Calculated distance: ', CalculatedDistance)
