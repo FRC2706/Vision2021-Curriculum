@@ -10,7 +10,7 @@ colRgbYellow = (0, 255, 255)
 colRgbPurple = (255, 102, 153)
 
 # colors for HSV filtering
-colHsvLowerGreen = (5, 50, 50)
+colHsvLowerGreen = (5, 100, 175)
 colHsvUpperGreen = (15, 255, 255)
 
 # fonts for displaying text
@@ -37,14 +37,14 @@ while not(flgExit):
     #print('Found', len(contours), 'contours in this photo!')
     indiv = contours[0]
     #print (indiv)
-    cv2.drawContours(bgrOriginal, [indiv], 0, (255,0,0), 2)
+    cv2.drawContours(bgrOriginal, [indiv], 0, (255,0,0), 1)
 
     #rect=cv2.minAreaRect(indiv)
     #box = cv2.boxPoints(rect)
     #box = np.int0(box)
     ix, iy, iw, ih =cv2.boundingRect(indiv)
     #cv2.drawContours(bgrOriginal,[box],0,(0,0,255),2)
-    cv2.imshow('oi', bgrOriginal)
+    cv2.imshow('Pylon Image', bgrOriginal)
     print('Image height: ',ih)
     #print(rect)
     #width=(rect[1][0])
