@@ -10,8 +10,10 @@ colRgbYellow = (0, 255, 255)
 colRgbPurple = (255, 102, 153)
 
 # colors for HSV filtering
-colHsvLowerGreen = (5, 100, 175)
-colHsvUpperGreen = (15, 255, 255)
+#colHsvLowerGreen = (5, 100, 175)
+#colHsvUpperGreen = (15, 255, 255)
+colHsvLowerGreen = (1, 190, 130)
+colHsvUpperGreen = (18, 255, 255)
 
 # fonts for displaying text
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -37,7 +39,7 @@ while not(flgExit):
     #print('Found', len(contours), 'contours in this photo!')
     indiv = contours[0]
     #print (indiv)
-    cv2.drawContours(bgrOriginal, [indiv], 0, (255,0,0), 1)
+    cv2.drawContours(bgrOriginal, [indiv], 0, (255,0,0), 2)
 
     #rect=cv2.minAreaRect(indiv)
     #box = cv2.boxPoints(rect)
