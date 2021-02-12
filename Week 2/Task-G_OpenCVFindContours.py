@@ -99,9 +99,9 @@ while not(flgExit):
     hsvOriginal = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
     
     # define a range of from upper to lower in HSV
-    arrLowerColor = np.array(colHsvLowerRange, dtype='int32')
-    arrUpperColor = np.array(colHsvUpperRange, dtype='int32')
-    
+    arrLowerColor = np.array([colHsvLowerRange])
+    arrUpperColor = np.array([colHsvUpperRange])
+
     # threshold the HSV image to get only green color
     mskBinary = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'kn')
 

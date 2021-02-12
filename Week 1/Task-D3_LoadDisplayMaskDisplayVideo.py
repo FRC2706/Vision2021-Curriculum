@@ -15,7 +15,7 @@ import cv2
 
 # NEW - Constants for various purposes...
 # for Camera number, when using more than one, generally, 0 is my laptop camera, 1 is first usb webcam found
-intCameraNumber = 1
+intCameraNumber = 0
 
 # colors for screen information
 colRgbBlue = (255, 0, 0)
@@ -47,6 +47,7 @@ while(True):
     # load a color image from camera
     # Capture frame-by-frame
     ret, bgrOriginal = cap.read()
+
     # display the color image to screen
     cv2.imshow('This is the original image', bgrOriginal)
 

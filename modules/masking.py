@@ -10,8 +10,32 @@ def maskByColor(hsvImage, LowColor, HighColor, Method):
         mskToReturn = maskByRange(hsvImage, LowColor, HighColor)
 
     elif Method == 'kn':
-        ([hueMin, satMin, valMin]) = LowColor
-        ([hueMax, satMax, valMax]) = HighColor
+        # LowColor = LowColor[0]
+        # hueMin, satMin, valMin = LowColor[0], LowColor[1], LowColor[2]
+        # HighColor = HighColor[0]
+        # hueMax, satMax, valMax = HighColor[0], HighColor[1], HighColor[2]
+        if isinstance(LowColor,np.ndarray):
+            #print('isndarry')
+            LowColor = LowColor[0]
+            #print(LowColor[0], LowColor[1], LowColor[2])
+            hueMin, satMin, valMin = LowColor[0], LowColor[1], LowColor[2]
+            #print(hueMin, satMin, valMin)
+            HighColor = HighColor[0]
+            hueMax, satMax, valMax = HighColor[0], HighColor[1], HighColor[2]
+        else:
+            #print('notndarray')
+            print(LowColor, type(LowColor))
+            if isinstance(LowColor,tuple):
+                #print('tuple')
+                (hueMin, satMin, valMin) = LowColor
+                (hueMax, satMax, valMax) = HighColor
+            else:
+                #print('list')
+                LowColor = LowColor[0]
+                hueMin, satMin, valMin = LowColor[0], LowColor[1], LowColor[2]
+                HighColor = HighColor[0]
+                hueMax, satMax, valMax = HighColor[0], HighColor[1], HighColor[2]
+
         mskToReturn = hsvThreshold(hsvImage, int(hueMin), int(hueMax), int(satMin), int(satMax), int(valMin), int(valMax))
 
     elif Method == '':
@@ -38,11 +62,12 @@ if __name__ == "__main__":
     hsvTestImage = cv2.cvtColor(bgrTestImage, cv2.COLOR_BGR2HSV)
 
     # using inrange from opencv make mask
-    mskBinary = maskByColor(hsvTestImage,  ((55, 220, 220)), ((65, 255, 255)), 'ir')
-    mskBinary = maskByColor(hsvTestImage,  ((55, 220, 220)), ((65, 255, 255)), 'kn')
+    mskBinaryIR = maskByColor(hsvTestImage,  ((55, 220, 220)), ((65, 255, 255)), 'ir')
+    mskBinaryKN = maskByColor(hsvTestImage,  ((55, 220, 220)), ((65, 255, 255)), 'kn')
 
     # display the mask to verify it visually
-    cv2.imshow('This is the mask', mskBinary)
+    cv2.imshow('This is the In Range mask', mskBinaryIR)
+    cv2.imshow('This is the Knoxville mask', mskBinaryKN)
 
     # wait for user input to close
     cv2.waitKey(0)

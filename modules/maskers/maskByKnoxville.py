@@ -5,9 +5,7 @@ import cv2
 
 def hsvThreshold(img, hueMin, hueMax, satMin, satMax, valMin, valMax):
 
-    #cv2.imshow('This is the input img', img)
-    print('mbk-recd', (hueMin, satMin, valMin), 'h', (hueMax, satMax, valMax))
-#    hue, sat, val = cv2.split(img)
+    # hue, sat, val = cv2.split(img)
     hue = img[:,:,0]
     sat = img[:,:,1]
     val = img[:,:,2]
