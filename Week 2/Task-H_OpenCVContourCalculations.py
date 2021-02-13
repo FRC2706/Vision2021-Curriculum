@@ -1,12 +1,27 @@
 # This is a pseudo code file for Merge Robotics, 2021, Game Changers
 
-# This is task G - > Find Contours.  This is a seemingly simple command. But is where the real math begins.  
-# The command basically converts the masked image into arrays of coordinates that we do math on.  Make sure
-# you can do this in your code.  You need to end up with a set of contours!  If you print them to the console
-# you will see pages and pages of coordinates go by.  Do that at least once.
+# This is task H - > OpenCV "Contour Calculations."  Not sure if it is clear by now, 
+# but OpenCV can do a lot of things, we need to understand what it offers to complete 
+# our vision code.  For a given single contour, (meaning it was imaged and masked and 
+# converted to a coordinate array), you need to be able to use a number of OpenCV functions.
+# Please experiment with the following, easiest is to simply draw them back to a blank image
+# or on top of original.
+
+# --> moments, contour area, contour perimeter, contour approximation, bounding rectangles, 
+# minimum enclosing circle, fitting elipse, fitting line, etc.
 
 # useful links
-# https://docs.opencv.org/4.5.0/d4/d73/tutorial_py_contours_begin.html
+# https://docs.opencv.org/4.5.0/d1/d32/tutorial_py_contour_properties.html
+
+# 1 Aspect Ratio
+# 2 Extent
+# 3 Solidity
+# 4 Equivalent Diameter
+# 5 Orientation
+# 6 Mask and Pixel Points
+# 7 Maximum Value, Minimum Value and their locations
+# 8 Mean Color or Mean Intensity
+# 9 Extreme Points
 
 # most of this code was taken from Task F2
 
@@ -38,7 +53,7 @@ colBgrJewel = (64, 109, 0)
 colBgrFruit = (64, 155, 64)
 
 # flags and multipliers for decision making
-booChooser = False  # True is yellow and worlds, False is green and targets at distance
+booChooser = True  # True is yellow and worlds, False is green and targets at distance
 tupNewImageSize = (640, 480)
 
 # colors for HSV filtering
@@ -46,7 +61,7 @@ if booChooser:
     colHsvLowerRange = (24, 100, 178) # yellow
     colHsvUpperRange = (36, 255, 255) # yellow
 else:
-    colHsvLowerRange = (50, 100, 100) # green ## BC put back to green
+    colHsvLowerRange = (50, 100, 100) # green 
     colHsvUpperRange = (90, 255, 255) # green 
 
 # fonts for displaying text
@@ -56,7 +71,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 if booChooser:
     strPathName = '2018-MergeAtWorlds/'
 else:
-    strPathName = '2021-targetAtDistances/' ## BC put back to tape not cones
+    strPathName = '2021-targetAtDistances/'
 
 # define an array with the names of images 
 arrImageFiles = []
@@ -71,7 +86,7 @@ if booChooser:
     arrImageFiles.append('04766_raw.png')
     arrImageFiles.append('07040_raw.png')
 else:
-    arrImageFiles.append('2021-01-09-093425-03.png')  ## BC put back tape
+    arrImageFiles.append('2021-01-09-093425-03.png')
     arrImageFiles.append('2021-01-09-093550-04.png')
     arrImageFiles.append('2021-01-09-093638-05.png')
     arrImageFiles.append('2021-01-09-093711-06.png')
@@ -100,7 +115,7 @@ while not(flgExit):
     arrUpperColor = np.array([colHsvUpperRange])
 
     # threshold the HSV image to get only green color
-    mskBinary = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'kn')
+    mskBinary = maskByColor(hsvOriginal, arrLowerColor, arrUpperColor, 'ir')
 
     # display the binary masks image to screen
     #cv2.imshow('This is the Binary mask - Knoxville', mskBinary)
@@ -112,10 +127,13 @@ while not(flgExit):
 
     # generate the array of Contours
     contours, hierarchy = cv2.findContours(mskBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-    # sort the array of Contours by area
-    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
     print('Found', len(contours), 'contours in this photo!')
+    
+    # sort the array of Contours by area
+    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)[:8]
+
+    # draw all the contours on the color mask
+    cv2.drawContours(mskColor, contours, -1, colBgrOrange, 2)
 
     # if there are no contours found
     if contours:
@@ -125,71 +143,52 @@ while not(flgExit):
         cv2.drawContours(mskColor, [indiv], 0, colBgrPurple, 3)
 
         # from this tutorial, do all the functions
-        # https://docs.opencv.org/4.5.0/dd/d49/tutorial_py_contour_features.html
+        # https://docs.opencv.org/4.5.0/d1/d32/tutorial_py_contour_properties.html
 
-        # 1 Moments
-        M = cv2.moments(indiv)
-        cx = int(M['m10']/M['m00'])
-        cy = int(M['m01']/M['m00'])
-
-        # 2 Area
+        # these functions need some of the math from Task G ## BC
         area = cv2.contourArea(indiv)
-
-        # 3 Permiter
-        perimeter = cv2.arcLength(indiv,True)
-
-        # 4 Approx
-        epsilon = 0.1*cv2.arcLength(indiv,True)
-        approx = cv2.approxPolyDP(indiv,epsilon,True)
-
-        # 5 Convex Hull
         hull = cv2.convexHull(indiv)
-
-        # 6 Convexity
-        convflag = cv2.isContourConvex(indiv)
-
-        # 7a Bounding Rectangle
         brx, bry, brw, brh = cv2.boundingRect(indiv)
-
-        # 7b Minimum Area Recctange
         rect = cv2.minAreaRect(indiv)
-
-        # 8 Minimum Enclosing Circle
-        (mecx, mecy), radius = cv2.minEnclosingCircle(indiv)
-        
-        # 9 Fit Elipse
         ellipse = cv2.fitEllipse(indiv)
 
-        # 10 Fit Line
-        [vx,vy,flx,fly] = cv2.fitLine(indiv, cv2.DIST_L2,0,0.01,0.01)
-        print(vx,vy,flx,fly)
+        # 1 Aspect Ratio
+        pass
 
-        # draw circle at centroid of target on colour mask, and known distance to target as text
-        cv2.circle(mskColor, (cx,cy), 4, colBgrPurple, -1)
+        # 2 Extent
+        pass
 
-        # draw bounding rectangle
-        cv2.rectangle(mskColor,(brx,bry),(brx+brw,bry+brh),colBgrOrange,2)
+        # 3 Solidity
+        pass
 
-        # draw min area recatangle
-        box = cv2.boxPoints(rect)
-        box = np.int0(box)
-        cv2.drawContours(mskColor,[box],0,colBgrBlue,2)
+        # 4 Equivalent Diameter
+        pass
 
-        # draw the min eclosing circle
-        center = (int(mecx),int(mecy))
-        radius = int(radius)
-        cv2.circle(mskColor,center,radius,colBgrCerise,2)
+        # 5 Orientation
+        pass
 
-        # draw the ellipse
-        cv2.ellipse(mskColor,ellipse,colBgrGrey,2)
+        # 6 Mask and Pixel Points
+        pass
 
-        # display fit line
-        rows, cols = hsvOriginal.shape[:2]
-        lefty = int((-flx*vy/vx) + fly)
-        righty = int(((cols-flx)*vy/vx)+fly)
-        print(lefty,righty)
-        print((cols-1,righty),(0,lefty))
-        cv2.line(mskBinary,(cols-1,righty),(0,lefty),colBgrWhite,2)
+        # 7 Maximum Value, Minimum Value and their locations
+        pass
+
+        # 8 Mean Color or Mean Intensity
+        pass
+
+        # 9 Extreme Points  
+        leftmost = tuple(indiv[indiv[:,:,0].argmin()][0])
+        rightmost = tuple(indiv[indiv[:,:,0].argmax()][0])
+        topmost = tuple(indiv[indiv[:,:,1].argmin()][0])
+        bottommost = tuple(indiv[indiv[:,:,1].argmax()][0])
+
+        # draw the equivalent circle diameter
+
+        # draw the extreme points
+        cv2.circle(mskColor, leftmost, 4, colBgrGreen, -1)
+        cv2.circle(mskColor, rightmost, 4, colBgrRed, -1)
+        cv2.circle(mskColor, topmost, 4, colBgrWhite, -1)
+        cv2.circle(mskColor, bottommost, 4, colBgrBlue, -1)
 
     # display the colour mask image to screen
     cv2.imshow('This is Task G', cv2.resize(mskColor, tupNewImageSize))
@@ -214,11 +213,3 @@ while not(flgExit):
 
 # cleanup and exit
 cv2.destroyAllWindows()
-
-
-
-
-
-
-
-
