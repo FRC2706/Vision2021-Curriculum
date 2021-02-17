@@ -53,7 +53,7 @@ colBgrJewel = (64, 109, 0)
 colBgrFruit = (64, 155, 64)
 
 # flags and multipliers for decision making
-booChooser = True  # True is yellow and worlds, False is green and targets at distance
+booChooser = False  # True is yellow and worlds, False is green and targets at distance
 tupNewImageSize = (640, 480)
 
 # colors for HSV filtering
@@ -95,14 +95,20 @@ else:
     arrImageFiles.append('2021-01-09-093902-09.png')
     arrImageFiles.append('2021-01-09-094009-10.png')
     arrImageFiles.append('2021-01-09-094029-11.png')
+    arrImageFiles.append('2021-02-16-203307-12.png')
 
 # setup loop
 flgExit = False
-intCounter = 0
+intCounter = len(arrImageFiles) - 1
+
+# begin loop
 while not(flgExit):
 
+    # a blank space at start of each file
+    print() 
+
     # print file to 
-    print(arrImageFiles[intCounter])
+    print('The file shown now is', arrImageFiles[intCounter])
 
     # load a color image using the string and array
     bgrOriginal = cv2.imread(strPathName + arrImageFiles[intCounter])
@@ -123,7 +129,6 @@ while not(flgExit):
     # create a full color mask
     # Bitwise-AND binary mask and original image
     mskColor = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=mskBinary)
-    mskExcluded = cv2.bitwise_and(bgrOriginal, bgrOriginal, mask=cv2.bitwise_not(mskBinary))
 
     # generate the array of Contours
     contours, hierarchy = cv2.findContours(mskBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -132,7 +137,8 @@ while not(flgExit):
     # sort the array of Contours by area
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)[:8]
 
-    # draw all the contours on the color mask
+    # draw the largets 8 contours on the color mask
+    print('The largerst 8 contours are outlined in orange')
     cv2.drawContours(mskColor, contours, -1, colBgrOrange, 2)
 
     # if there are no contours found
@@ -140,26 +146,28 @@ while not(flgExit):
         indiv = contours[0]
 
         # draw the indiv contour on the color mask
-        cv2.drawContours(mskColor, [indiv], 0, colBgrPurple, 3)
+        print('The largest contour is outlined in purple')
+        cv2.drawContours(mskColor, [indiv], 0, colBgrPurple, 5)
 
         # from this tutorial, do all the functions
         # https://docs.opencv.org/4.5.0/d1/d32/tutorial_py_contour_properties.html
 
-        # these functions need some of the math from Task G ## BC
+        # these task H functions need some of the math from Task G ## BC
         area = cv2.contourArea(indiv)
         hull = cv2.convexHull(indiv)
         brx, bry, brw, brh = cv2.boundingRect(indiv)
         rect = cv2.minAreaRect(indiv)
         ellipse = cv2.fitEllipse(indiv)
 
-        # 1 Aspect Ratio
-        pass
+        # 1 Aspect Ratio, note can do bounding rectangle or minArea rectangle
+        print('The bounding based Aspect Ratio is', '{:.2f}'.format(brw / brh))
 
         # 2 Extent
-        pass
+        print('The extent of the contour is', '{:.2f}'.format(area / (brw * brh)))
 
         # 3 Solidity
-        pass
+        hull_area = cv2.contourArea(hull)
+        print('The solidity of the contour is', '{:.2f}'.format(area / hull_area))
 
         # 4 Equivalent Diameter
         pass
@@ -182,6 +190,14 @@ while not(flgExit):
         topmost = tuple(indiv[indiv[:,:,1].argmin()][0])
         bottommost = tuple(indiv[indiv[:,:,1].argmax()][0])
 
+        # draw bounding rectangle
+        print('The bounding rectangle is outline in white')
+        cv2.rectangle(mskColor,(brx,bry),(brx+brw,bry+brh),colBgrWhite,1)
+
+        # draw the hull on the color mask
+        print('The hull is outlined in yellow')
+        cv2.drawContours(mskColor, [hull], 0, colBgrYellow, 2)
+
         # draw the equivalent circle diameter
 
         # draw the extreme points
@@ -191,8 +207,7 @@ while not(flgExit):
         cv2.circle(mskColor, bottommost, 4, colBgrBlue, -1)
 
     # display the colour mask image to screen
-    cv2.imshow('This is Task G', cv2.resize(mskColor, tupNewImageSize))
-    cv2.imshow('This is Task G Excluded', cv2.resize(mskExcluded, tupNewImageSize))
+    cv2.imshow('This is Task H', cv2.resize(mskColor, tupNewImageSize))
 
     # wait for user input to move or close
     while(True):

@@ -43,7 +43,7 @@ hsvTestImage = cv2.cvtColor(bgrTestImage, cv2.COLOR_BGR2HSV)
 mskBinaryIR = maskByColor(hsvTestImage, arrLowerColor, arrUpperColor, 'ir')
 '''
     timesIR = timeit.repeat(setup = SETUP_CODE, stmt = TEST_CODE, repeat = 3, number = 2500)
-    print('in range time: {}'.format(min(timesIR)))
+    print('in range time: ', '{:.2f}'.format(min(timesIR)))
     return timesIR
 
 def knx2500():
@@ -65,7 +65,7 @@ hsvTestImage = cv2.cvtColor(bgrTestImage, cv2.COLOR_BGR2HSV)
 mskBinaryKN = maskByColor(hsvTestImage, arrLowerColor, arrUpperColor, 'kn')
 '''
     times = timeit.repeat(setup = SETUP_CODE, stmt = TEST_CODE, repeat = 3, number = 2500)
-    print('knoxville time: {}'.format(min(times)))	
+    print('knoxville time: ', '{:.2f}'.format(min(times)))	
 
 # -=-=-=-=-=-=-=-=-=-
 # NEW - This is the start of the main code for this file
