@@ -3,8 +3,7 @@
 # This is task O - > Sample Filter Contours. 
 
 # Over the weeks, we have explored ways to understand Contours visually and using
-# OpenCV functions.  Now lets put these to work and really get down to the 
-# challenge of finding FRC vision targets.  Basic idea is to loop through
+# OpenCV functions.  Now lets put these to work and really get down to the promptUsernge of finding FRC vision targets.  Basic idea is to loop through
 # sorted contours keeping desired contous only.
 
 # Significant contributions from Task D5 and H ...
@@ -14,8 +13,9 @@
 import numpy as np
 import cv2
 import sys
-from Task_O_SFC_drawAllAsIs import drawAllAsIs
 from Task_O_SFC_displayUserInstructions import displayUserInstructions
+from Task_O_SFC_drawAllAsIs import drawAllAsIs
+from Task_O_SFC_filterBoundedSquaresIn import filterBoundedSquaresIn
 
 # Constants!
 # colors for screen information
@@ -43,24 +43,29 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 # define and fill an array with the names of images 
 arrImageFiles = []
-arrImageFiles.append('Task-O_small.png')
 arrImageFiles.append('Task-O_medium.png')
 arrImageFiles.append('Task-O_large.png')
+arrImageFiles.append('Task-O_small.png')
 
 # setup exit flag for loop ahead of instructions
 flgExit = False
-
-# instruct user on what to do
-k = displayUserInstructions()
-
-# show user instruction and check if they want to quit
-if k == 27: 
-    cv2.destroyAllWindows
-    flgExit = True
+flgUIFirst = True
 
 # setup loop
 intCounter = 0
 while not(flgExit):
+
+    # instruct user on what to do
+    k = displayUserInstructions(flgUIFirst)
+
+    # toggle flag for first user prompt off now that we collect from functions
+    flgUIFirst = False
+
+    # and check if they want to quit
+    if k == 27: 
+        cv2.destroyAllWindows
+        flgExit = True
+        break
 
     # load a color image using the string and array
     bgrOriginal = cv2.imread(strPathName + arrImageFiles[intCounter])
@@ -95,9 +100,27 @@ while not(flgExit):
         if intCounter > len(arrImageFiles) - 1:
             intCounter = 0
 
+    # show the output of filtering by bounding rectangle extent, wait for user
+    k = filterBoundedSquaresIn(bgrOriginal, mskBinary, contours)
+
+    # process keypress from use on function
+    if k == 113 or k == 27:
+        flgExit = True
+        break
+    if k == 105:
+        intCounter = intCounter - 1
+        if intCounter < 0: 
+            intCounter = len(arrImageFiles) - 1
+    if k == 109:
+        intCounter = intCounter + 1
+        if intCounter > len(arrImageFiles) - 1:
+            intCounter = 0
+
     # do next function here
 
-# cleanup and exit
-cv2.destroyAllWindows()
+    # cleanup and exit
+    cv2.destroyAllWindows()
 
+    # end of loop
 
+# end of file

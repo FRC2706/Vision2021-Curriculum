@@ -10,7 +10,7 @@ colBgrWhite = (255, 255, 255)
 # fonts for displaying text
 font = cv2.FONT_HERSHEY_SIMPLEX
 
-def displayUserInstructions():
+def displayUserInstructions(promptUser):
 
     # create empty bgr image for the test
     bgrUserInstructions = np.zeros(shape=[240, 320, 3], dtype=np.uint8)
@@ -26,15 +26,18 @@ def displayUserInstructions():
     # display the test image to verify it visually
     cv2.imshow('These are the user instructions', bgrUserInstructions)
 
-    # wait for user input to move or close
-    k = cv2.waitKey(0)
-
-    return k
+    # if prompt user is true then
+    if promptUser:
+        # wait for user input to move or close
+        k = cv2.waitKey(0)
+        return k
+    else:
+        return 0
 
 if __name__ == "__main__":
 
     # create empty bgr image for the test
-    k = displayUserInstructions()
+    k = displayUserInstructions(True)
 
     # 
     print('k = ', k)

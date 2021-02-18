@@ -160,10 +160,10 @@ while not(flgExit):
         ellipse = cv2.fitEllipse(indiv)
 
         # 1 Aspect Ratio, note can do bounding rectangle or minArea rectangle
-        print('The bounding based Aspect Ratio is', '{:.2f}'.format(brw / brh))
+        print('The bounding Aspect Ratio is', '{:.2f}'.format(brw / brh))
 
-        # 2 Extent
-        print('The extent of the contour is', '{:.2f}'.format(area / (brw * brh)))
+        # 2 Extent, note can do bounding or minArea rectangle
+        print('The bounding Extent is', '{:.2f}'.format(area / (brw * brh)))
 
         # 3 Solidity
         hull_area = cv2.contourArea(hull)
