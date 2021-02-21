@@ -15,7 +15,7 @@ import cv2
 
 # NEW - Constants for various purposes...
 # for Camera number, when using more than one, generally, 0 is my laptop camera, 1 is first usb webcam found
-intCameraNumber = 1
+intCameraNumber = 0
 
 # colors for screen information
 colRgbBlue = (255, 0, 0)
@@ -33,13 +33,14 @@ elif intCameraNumber == 0:
 # define the camera
 # CAP_DSHOW tells OpenCV / Windows to use the DirectShow API
 # 0 is my laptop camera, 1 is first usb webcam found
-cap = cv2.VideoCapture(intCameraNumber + cv2.CAP_DSHOW)
+#cap = cv2.VideoCapture(intCameraNumber + cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 
-if intCameraNumber == 1:
-    pass
-elif intCameraNumber == 0:
-    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25) # turns off auto exposure
-    cap.set(cv2.CAP_PROP_EXPOSURE, -8) # turns exposure to seconds based on power of 2, so negative is a small duration
+#if intCameraNumber == 1:
+#    pass
+#elif intCameraNumber == 0:
+#    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25) # turns off auto exposure
+#    cap.set(cv2.CAP_PROP_EXPOSURE, -8) # turns exposure to seconds based on power of 2, so negative is a small duration
     
 # setup loop
 while(True):
@@ -54,7 +55,7 @@ while(True):
     # Convert RGB(BGR) to HSV
     hsvOriginal = cv2.cvtColor(bgrOriginal, cv2.COLOR_BGR2HSV)
 
-    # define a range of from upper to lower in HSV
+    # define a range of from upper to lower in qHSV
     arrLowerColor = np.array([colHsvLowerGreen])
     arrUpperColor = np.array([colHsvUpperGreen]) 
 
