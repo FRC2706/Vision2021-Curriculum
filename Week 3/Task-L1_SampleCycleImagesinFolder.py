@@ -12,11 +12,11 @@ import cv2
 import os
 
 # select folder of interest
-dirName = '2017-pegsAtDistance/'
+dirName = '../2017-pegsAtDistance/'
 
 # read file names
 fileNames = os.listdir(dirName)
-#print('fileNames ', fileNames)
+print('fileNames ', fileNames)
 
 # filter file names
 arrImageFiles = []
