@@ -152,7 +152,7 @@ while not(flgExit):
         # from this tutorial, do all the functions
         # https://docs.opencv.org/4.5.0/d1/d32/tutorial_py_contour_properties.html
 
-        # these task H functions need some of the math from Task G ## BC
+        # these task H functions need some of the math from Task G
         area = cv2.contourArea(indiv)
         hull = cv2.convexHull(indiv)
         brx, bry, brw, brh = cv2.boundingRect(indiv)

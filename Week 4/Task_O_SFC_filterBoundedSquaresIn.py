@@ -10,20 +10,27 @@ colRgbPurple = (255, 102, 153)
 
 def filterBoundedSquaresIn(bgrImage, mskImage, contours):
 
-    (height, width, something) = bgrImage.shape
+    # the _ is a waste bin for data from the shape property, we don't need
+    (height, width, _) = bgrImage.shape
+    
     # create array to store contours filtered
     squareContours = []
 
+    intCounter = 0
     # loop though all the contours
     for indiv in contours:
-    
+
         # calculate the bounding extent
         area = cv2.contourArea(indiv)
         brx, bry, brw, brh = cv2.boundingRect(indiv)
         brextent = area / (brw * brh)
 
-        if brextent > 0.95: 
+        print(f'contour area={area}, width={brw}, height={brh}, brarea={brw*brh}')
+        print('indiv=', intCounter, 'brextent=', brextent)
+        if brextent > 0.85: 
             squareContours.append(indiv)
+
+        intCounter += 1
 
     # draw the outline of the filtered contours on the color mask
     cv2.drawContours(bgrImage, squareContours, -1, colBgrOrange, 2)
