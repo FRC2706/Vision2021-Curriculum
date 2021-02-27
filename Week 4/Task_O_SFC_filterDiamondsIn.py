@@ -7,8 +7,14 @@ import cv2
 # colors for screen information
 colBgrOrange = (0, 128, 255)
 colRgbPurple = (255, 102, 153)
+colBgrBlue = (255, 0, 0)
+colBgrGreen = (0 , 255, 0)
+colBgrRed = (0, 0, 255)
+colBgrYellow = (0, 255, 255)
+colBgrPurple = (255, 102, 153)
+colBgrWhite = (255, 255, 255)
 
-def filterBoundedSquaresIn(bgrImage, mskImage, contours):
+def filterDiamondsIn(bgrImage, mskImage, contours):
 
     # the _ is a waste bin for data from the shape property, we don't need
     (height, width, _) = bgrImage.shape
@@ -24,11 +30,15 @@ def filterBoundedSquaresIn(bgrImage, mskImage, contours):
         area = cv2.contourArea(indiv)
         brx, bry, brw, brh = cv2.boundingRect(indiv)
         brextent = area / (brw * brh)
+        (arx, ary), (arw, arh), ara = cv2.minAreaRect(indiv)
+        arextent = area / (arw * arh)
 
-        #print(f'contour area={area}, width={brw}, height={brh}, brarea={brw*brh}')
-        #print('indiv=', intCounter, 'brextent=', brextent)
-        if brextent > 0.85: 
+        if arextent > 0.95 and (0.45 < brextent < 0.55): 
             squareContours.append(indiv)
+            #print(f'contour area={area}, width={brw}, height={brh}, brarea={brw*brh}')
+            #print('indiv=', intCounter, 'brextent=', brextent)
+            #print(f'contour area={area}, width={arw}, height={arh}, brarea={arw*arh}')
+            #print('indiv=', intCounter, 'arextent=', arextent)
 
         intCounter += 1
 
@@ -43,14 +53,37 @@ def filterBoundedSquaresIn(bgrImage, mskImage, contours):
     # Bitwise-AND binary mask and original image
     mskColor = cv2.bitwise_and(bgrImage, bgrImage, mask=mskBinarySquares)
 
+    # sort contours by area decreasing
+    #sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=True)
+
+    # sort contours by area increasing
+    sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=True)
+
+    # sort contours by leftmost
+    #sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=True)
+
+    indiv = sortedContours[0]
+
     # draw circle at centroid of target on colour mask, and known distance to target as text
-    M = cv2.moments(squareContours[0])
+    M = cv2.moments(indiv)
     cx = int(M['m10']/M['m00'])
     cy = int(M['m01']/M['m00'])
     cv2.circle(mskColor, (cx,cy), 4, colRgbPurple, -1)
 
+    # 9 Extreme Points  
+    leftmost = tuple(indiv[indiv[:,:,0].argmin()][0])
+    rightmost = tuple(indiv[indiv[:,:,0].argmax()][0])
+    topmost = tuple(indiv[indiv[:,:,1].argmin()][0])
+    bottommost = tuple(indiv[indiv[:,:,1].argmax()][0])
+
+    # draw the extreme points
+    cv2.circle(mskColor, leftmost, 4, colBgrGreen, -1)
+    cv2.circle(mskColor, rightmost, 4, colBgrRed, -1)
+    cv2.circle(mskColor, topmost, 4, colBgrWhite, -1)
+    cv2.circle(mskColor, bottommost, 4, colBgrBlue, -1)
+
     # display the colour mask image to screen
-    cv2.imshow('Filtered by bounding extent colour mask', mskColor)
+    cv2.imshow('Filtered diamonds by bounding extent colour mask', mskColor)
 
     # wait for user input to close
     while(True):
@@ -75,8 +108,12 @@ if __name__ == "__main__":
     # create empty bgr image for the test
     bgrTestImage = np.zeros(shape=[240, 320, 3], dtype=np.uint8)
 
-    # draw a green rectangle on the test image
-    bgrTestImage = cv2.rectangle(bgrTestImage,(130,20),(160,140),(0,255,0),-1)
+    # draw a green square on the test image
+    bgrTestImage = cv2.rectangle(bgrTestImage,(50,100),(110,160),(0,255,0),-1)
+
+    # draw a green diamond on the test image
+    pts = np.array([[200,60],[250,110],[200,160],[150,110]], np.int32)
+    bgrTestImage = cv2.drawContours(bgrTestImage,[pts],0,(0,255,0), -1)
 
     # display the test image to verify it visually
     cv2.imshow('This is the test image', bgrTestImage)
@@ -92,7 +129,9 @@ if __name__ == "__main__":
     print('Found', len(contours), 'contours in this photo!')
 
     # pass test image, binary mask and cotours to function to display all as is
-    ke = filterBoundedSquaresIn(bgrTestImage, mskBinary, contours)
+    ke = filterDiamondsIn(bgrTestImage, mskBinary, contours)
+
+    indiv = contours[0]
 
     # print user keypress
     print ('ke = ', ke)
