@@ -57,10 +57,10 @@ def filterDiamondsIn(bgrImage, mskImage, contours):
     #sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=True)
 
     # sort contours by area increasing
-    sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=True)
+    sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=False)
 
     # sort contours by leftmost
-    #sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=True)
+    sortedContours = sorted(squareContours, key=lambda x: tuple(x[x[:,:,0].argmin()][0])[0], reverse=False)
 
     indiv = sortedContours[0]
 

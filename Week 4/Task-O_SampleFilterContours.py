@@ -17,6 +17,7 @@ from Task_O_SFC_displayUserInstructions import displayUserInstructions
 from Task_O_SFC_drawAllAsIs import drawAllAsIs
 from Task_O_SFC_filterBoundedSquaresIn import filterBoundedSquaresIn
 from Task_O_SFC_filterDiamondsIn import filterDiamondsIn
+from Task_O_SFC_filterSlantedRectanglesIn import *
 
 # Constants!
 # colors for screen information
@@ -41,6 +42,14 @@ strPathName = 'Week 4/'
 
 # fonts for displaying text
 font = cv2.FONT_HERSHEY_SIMPLEX
+
+# Print python version
+print('\n')
+print('Python version', sys.version, '\n')
+
+# Print version string
+cv2Version = '{0}'.format(cv2.__version__)
+print('OpenCV version', '{0}'.format(cv2.__version__), '\n')
 
 # define and fill an array with the names of images 
 arrImageFiles = []
@@ -119,6 +128,22 @@ while not(flgExit):
 
     # show the output of filtering by bounding rectangle extent, wait for user
     k = filterDiamondsIn(bgrOriginal, mskBinary, contours)
+
+    # process keypress from use on function
+    if k == 113 or k == 27:
+        flgExit = True
+        break
+    if k == 105:
+        intCounter = intCounter - 1
+        if intCounter < 0: 
+            intCounter = len(arrImageFiles) - 1
+    if k == 109:
+        intCounter = intCounter + 1
+        if intCounter > len(arrImageFiles) - 1:
+            intCounter = 0
+
+    # show the output of filtering by bounding rectangle extent, wait for user
+    k = filterSlantedRectanglesIn(bgrOriginal, mskBinary, contours, cv2Version)
 
     # process keypress from use on function
     if k == 113 or k == 27:
