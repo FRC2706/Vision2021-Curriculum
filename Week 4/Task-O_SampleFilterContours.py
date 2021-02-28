@@ -18,6 +18,7 @@ from Task_O_SFC_drawAllAsIs import drawAllAsIs
 from Task_O_SFC_filterBoundedSquaresIn import filterBoundedSquaresIn
 from Task_O_SFC_filterDiamondsIn import filterDiamondsIn
 from Task_O_SFC_filterSlantedRectanglesIn import *
+from Task_O_SFC_filterCirclesIn import *
 
 # Constants!
 # colors for screen information
@@ -126,7 +127,7 @@ while not(flgExit):
         if intCounter > len(arrImageFiles) - 1:
             intCounter = 0
 
-    # show the output of filtering by bounding rectangle extent, wait for user
+    # show the output of filtering by Diamonds, wait for user
     k = filterDiamondsIn(bgrOriginal, mskBinary, contours)
 
     # process keypress from use on function
@@ -142,7 +143,7 @@ while not(flgExit):
         if intCounter > len(arrImageFiles) - 1:
             intCounter = 0
 
-    # show the output of filtering by bounding rectangle extent, wait for user
+    # show the output of filtering by Slanted Rectangles, wait for user
     k = filterSlantedRectanglesIn(bgrOriginal, mskBinary, contours, cv2Version)
 
     # process keypress from use on function
@@ -158,7 +159,23 @@ while not(flgExit):
         if intCounter > len(arrImageFiles) - 1:
             intCounter = 0
 
-    # do next function here
+    # show the output of filtering by circles, wait for user
+    k = filterCirclesIn(bgrOriginal, mskBinary, contours, cv2Version)
+
+    # process keypress from use on function
+    if k == 113 or k == 27:
+        flgExit = True
+        break
+    if k == 105:
+        intCounter = intCounter - 1
+        if intCounter < 0: 
+            intCounter = len(arrImageFiles) - 1
+    if k == 109:
+        intCounter = intCounter + 1
+        if intCounter > len(arrImageFiles) - 1:
+            intCounter = 0
+
+   # do next function here
 
     # cleanup and exit
     cv2.destroyAllWindows()
