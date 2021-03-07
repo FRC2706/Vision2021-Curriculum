@@ -1,14 +1,18 @@
 # This is a pseudo code file for Merge Robotics, 2021, Game Changers
 
-# This is task G - > Find Contours.  This is a seemingly simple command. But is where the real math begins.  
-# The command basically converts the masked image into arrays of coordinates that we do math on.  Make sure
-# you can do this in your code.  You need to end up with a set of contours!  If you print them to the console
-# you will see pages and pages of coordinates go by.  Do that at least once.
+# This is task P - > Math with Solve PNP function
 
-# useful links
-# https://docs.opencv.org/4.5.0/d4/d73/tutorial_py_contours_begin.html
+# On the GIGMM trail we have used some simple math in the past, now let's look 
+# at some complex math, or a specific function from OpenCV called SolvePNP
 
-# most of this code was taken from Task F2
+# to get there, lots of learning... but with sample code, here are some links
+
+# https://docs.opencv.org/4.5.0/d9/db7/tutorial_py_table_of_contents_calib3d.html
+# https://github.com/ligerbots/VisionServer/blob/master/utils/camera_calibration.py
+# https://markhedleyjones.com/storage/checkerboards/Checkerboard-A4-25mm-10x7.pdf
+# https://github.com/ligerbots/VisionServer/blob/master/data/calibration/chessboard_9x6.png
+
+# start with Task G code, add some D5 and a little of G and H
 
 # Imports!
 # Python - import modules of code as required (OpenCV here)
@@ -38,48 +42,37 @@ colBgrJewel = (64, 109, 0)
 colBgrFruit = (64, 155, 64)
 
 # flags and multipliers for decision making
-booChooser = False  # True is yellow and worlds, False is green and targets at distance
+booChooser = True  # True is green and targets at distance, False is orange and cones for now
 tupNewImageSize = (640, 480)
 
 # colors for HSV filtering
 if booChooser:
-    colHsvLowerRange = (24, 100, 178) # yellow
-    colHsvUpperRange = (36, 255, 255) # yellow
+    colHsvLowerRange = (50, 100, 100) # green
+    colHsvUpperRange = (90, 255, 255) # green
 else:
-    colHsvLowerRange = (50, 100, 100) # green ## BC put back to green
-    colHsvUpperRange = (90, 255, 255) # green 
+    colHsvLowerRange = (10, 100, 100) # green try 50, 100, 100
+    colHsvUpperRange = (15, 255, 255) # green try 90, 255, 255
 
 # fonts for displaying text
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 # define a string variable for the path to the file
 if booChooser:
-    strPathName = '2018-MergeAtWorlds/'
+    strPathName = '2021-targetAtDistances/'
 else:
-    strPathName = '2021-targetAtDistances/' ## BC put back to tape not cones
+    strPathName = '2021-conesAsMarkers/'
 
 # define an array with the names of images 
 arrImageFiles = []
 
 # fill an array with the names of images 
 if booChooser:
-    arrImageFiles.append('03320_raw.png')
-    arrImageFiles.append('03952_raw.png')
-    arrImageFiles.append('04547_raw.png')
-    arrImageFiles.append('04615_raw.png')
-    arrImageFiles.append('04664_raw.png')
-    arrImageFiles.append('04766_raw.png')
-    arrImageFiles.append('07040_raw.png')
-else:
-    arrImageFiles.append('2021-01-09-093425-03.png')  ## BC put back tape
-    arrImageFiles.append('2021-01-09-093550-04.png')
-    arrImageFiles.append('2021-01-09-093638-05.png')
-    arrImageFiles.append('2021-01-09-093711-06.png')
-    arrImageFiles.append('2021-01-09-093740-07.png')
-    arrImageFiles.append('2021-01-09-093821-08.png')
-    arrImageFiles.append('2021-01-09-093902-09.png')
+    arrImageFiles.append('2021-01-09-093303-01.png')
     arrImageFiles.append('2021-01-09-094009-10.png')
     arrImageFiles.append('2021-01-09-094029-11.png')
+else:
+    arrImageFiles.append('cone-01.png')
+    arrImageFiles.append('cone-02.png')
 
 # setup loop
 flgExit = False
@@ -145,52 +138,29 @@ while not(flgExit):
         # 5 Convex Hull
         hull = cv2.convexHull(indiv)
 
-        # 6 Convexity
-        convflag = cv2.isContourConvex(indiv)
-
-        # 7a Bounding Rectangle
-        brx, bry, brw, brh = cv2.boundingRect(indiv)
-
-        # 7b Minimum Area Recctange
-        rect = cv2.minAreaRect(indiv)
-
         # 8 Minimum Enclosing Circle
         (mecx, mecy), radius = cv2.minEnclosingCircle(indiv)
-        
-        # 9 Fit Elipse
-        ellipse = cv2.fitEllipse(indiv)
 
-        # 10 Fit Line
-        [vx,vy,flx,fly] = cv2.fitLine(indiv, cv2.DIST_L2,0,0.01,0.01)
-        print(vx,vy,flx,fly)
-
+        # 9 Extreme Points  
+        leftmost = tuple(indiv[indiv[:,:,0].argmin()][0])
+        rightmost = tuple(indiv[indiv[:,:,0].argmax()][0])
+        topmost = tuple(indiv[indiv[:,:,1].argmin()][0])
+        bottommost = tuple(indiv[indiv[:,:,1].argmax()][0])
+       
         # draw circle at centroid of target on colour mask, and known distance to target as text
         cv2.circle(mskColor, (cx,cy), 4, colBgrPurple, -1)
-
-        # draw bounding rectangle
-        cv2.rectangle(mskColor,(brx,bry),(brx+brw,bry+brh),colBgrOrange,2)
-
-        # draw min area recatangle
-        box = cv2.boxPoints(rect)
-        box = np.int0(box)
-        cv2.drawContours(mskColor,[box],0,colBgrBlue,2)
 
         # draw the min eclosing circle
         center = (int(mecx),int(mecy))
         radius = int(radius)
         cv2.circle(mskColor,center,radius,colBgrCerise,2)
 
-        # draw the ellipse
-        cv2.ellipse(mskColor,ellipse,colBgrGrey,2)
-
-        # display fit line
-        rows, cols = hsvOriginal.shape[:2]
-        lefty = int((-flx*vy/vx) + fly)
-        righty = int(((cols-flx)*vy/vx)+fly)
-        print(lefty,righty)
-        print((cols-1,righty),(0,lefty))
-        cv2.line(mskBinary,(cols-1,righty),(0,lefty),colBgrWhite,2)
-
+        # draw the extreme points
+        cv2.circle(mskColor, leftmost, 4, colBgrGreen, -1)
+        cv2.circle(mskColor, rightmost, 4, colBgrRed, -1)
+        cv2.circle(mskColor, topmost, 4, colBgrWhite, -1)
+        cv2.circle(mskColor, bottommost, 4, colBgrBlue, -1)
+ 
     # display the colour mask image to screen
     cv2.imshow('This is Task G', cv2.resize(mskColor, tupNewImageSize))
     cv2.imshow('This is Task G Excluded', cv2.resize(mskExcluded, tupNewImageSize))
@@ -214,11 +184,6 @@ while not(flgExit):
 
 # cleanup and exit
 cv2.destroyAllWindows()
-
-
-
-
-
 
 
 
