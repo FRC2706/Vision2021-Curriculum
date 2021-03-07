@@ -1,0 +1,1 @@
+python camera_calibration.py --length 14 --width 8 --size 2.0 --output sketchup --output-images out cb-01.png cb-02.png cb-03.png cb-04.png cb-05.png cb-06.png cb-07.png cb-08.png cb-09.png cb-10.png cb-11.png 

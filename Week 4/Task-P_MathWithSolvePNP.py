@@ -19,6 +19,8 @@
 import numpy as np
 import cv2
 from masking import maskByColor
+from Task_P_Camera_Calibrations import *
+from Task_P_SolvePNP_Module import *
 
 # Constants!
 # colors for screen information
@@ -42,7 +44,7 @@ colBgrJewel = (64, 109, 0)
 colBgrFruit = (64, 155, 64)
 
 # flags and multipliers for decision making
-booChooser = True  # True is green and targets at distance, False is orange and cones for now
+booChooser = False  # True is green and targets at distance, False is orange and cones for now
 tupNewImageSize = (640, 480)
 
 # colors for HSV filtering
@@ -50,17 +52,33 @@ if booChooser:
     colHsvLowerRange = (50, 100, 100) # green
     colHsvUpperRange = (90, 255, 255) # green
 else:
-    colHsvLowerRange = (10, 100, 100) # green try 50, 100, 100
-    colHsvUpperRange = (15, 255, 255) # green try 90, 255, 255
+    colHsvLowerRange = (50, 100, 100) # green try 50, 100, 100
+    colHsvUpperRange = (90, 255, 255) # green try 90, 255, 255
 
 # fonts for displaying text
 font = cv2.FONT_HERSHEY_SIMPLEX
+
+# 52 is sketchup
+camera_matrix, dist_coeffs = load_camera_details(52)
+
+print('camera ->',camera_matrix, dist_coeffs)
+
+# distance from center to tip in four directions
+diamond_distance = 12
+
+# this is setting up the target for SolvePNP
+real_world_coordinates = np.array([
+    [-diamond_distance, 0.0, 0.0],
+    [0.0, diamond_distance, 0.0],
+    [+diamond_distance, 0.0, 0.0],
+    [0.0, -diamond_distance, 0.0],
+])
 
 # define a string variable for the path to the file
 if booChooser:
     strPathName = '2021-targetAtDistances/'
 else:
-    strPathName = '2021-conesAsMarkers/'
+    strPathName = '2021-irahTapeTesting/'
 
 # define an array with the names of images 
 arrImageFiles = []
@@ -71,8 +89,15 @@ if booChooser:
     arrImageFiles.append('2021-01-09-094009-10.png')
     arrImageFiles.append('2021-01-09-094029-11.png')
 else:
-    arrImageFiles.append('cone-01.png')
-    arrImageFiles.append('cone-02.png')
+    arrImageFiles.append('circleSquare-06f-00d.png')
+    arrImageFiles.append('circleSquare-06f-35d.png')
+    arrImageFiles.append('circleSquare-06f+35d.png')
+    arrImageFiles.append('circleSquare-10f-00d.png')
+    arrImageFiles.append('circleSquare-14f-00d.png')
+    arrImageFiles.append('circleSquare-14f-20d.png')
+    arrImageFiles.append('circleSquare-14f+20d.png')    
+    arrImageFiles.append('circleSquare-18f-00d.png')
+    arrImageFiles.append('circleSquare-22f-00d.png')
 
 # setup loop
 flgExit = False
@@ -107,12 +132,37 @@ while not(flgExit):
     contours, hierarchy = cv2.findContours(mskBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     # sort the array of Contours by area
-    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+    sortedContours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)[:3]
     print('Found', len(contours), 'contours in this photo!')
 
-    # if there are no contours found
-    if contours:
-        indiv = contours[0]
+    # create array to store contours filtered
+    diamondContours = []
+
+    # loop though all the contours
+    for intCount, indiv in enumerate(sortedContours):
+
+        # calculate the bounding extent
+        area = cv2.contourArea(indiv)
+
+        if area == 0:
+            continue
+
+        brx, bry, brw, brh = cv2.boundingRect(indiv)
+        brextent = area / (brw * brh)
+        (arx, ary), (arw, arh), ara = cv2.minAreaRect(indiv)
+        arextent = area / (arw * arh)
+
+        #print(f'contour area={area}, br-width={brw}, br-height={brh}, br-area={brw*brh}')
+        #print('indiv=', intCount, 'br-extent=', brextent)
+        #print(f'contour area={area}, ma-width={arw}, ma-height={arh}, ma-area={arw*arh}')
+        #print('indiv=', intCount, 'ma-extent=', arextent)
+
+        if arextent > 0.75 and (0.45 < brextent < 0.55): 
+            diamondContours.append(indiv)
+
+    # if there are contours found
+    if diamondContours:
+        indiv = diamondContours[0]
 
         # draw the indiv contour on the color mask
         cv2.drawContours(mskColor, [indiv], 0, colBgrPurple, 3)
@@ -125,22 +175,6 @@ while not(flgExit):
         cx = int(M['m10']/M['m00'])
         cy = int(M['m01']/M['m00'])
 
-        # 2 Area
-        area = cv2.contourArea(indiv)
-
-        # 3 Permiter
-        perimeter = cv2.arcLength(indiv,True)
-
-        # 4 Approx
-        epsilon = 0.1*cv2.arcLength(indiv,True)
-        approx = cv2.approxPolyDP(indiv,epsilon,True)
-
-        # 5 Convex Hull
-        hull = cv2.convexHull(indiv)
-
-        # 8 Minimum Enclosing Circle
-        (mecx, mecy), radius = cv2.minEnclosingCircle(indiv)
-
         # 9 Extreme Points  
         leftmost = tuple(indiv[indiv[:,:,0].argmin()][0])
         rightmost = tuple(indiv[indiv[:,:,0].argmax()][0])
@@ -150,24 +184,30 @@ while not(flgExit):
         # draw circle at centroid of target on colour mask, and known distance to target as text
         cv2.circle(mskColor, (cx,cy), 4, colBgrPurple, -1)
 
-        # draw the min eclosing circle
-        center = (int(mecx),int(mecy))
-        radius = int(radius)
-        cv2.circle(mskColor,center,radius,colBgrCerise,2)
-
         # draw the extreme points
         cv2.circle(mskColor, leftmost, 4, colBgrGreen, -1)
         cv2.circle(mskColor, rightmost, 4, colBgrRed, -1)
         cv2.circle(mskColor, topmost, 4, colBgrWhite, -1)
         cv2.circle(mskColor, bottommost, 4, colBgrBlue, -1)
  
+        # fill found corners with the most data set found in the image
+        found_corners = np.array([leftmost, topmost, rightmost, bottommost], dtype="double")
+
+        #
+        (success, rotation_vector, translation_vector) = cv2.solvePnP(real_world_coordinates, found_corners, camera_matrix, dist_coeffs)
+
+        inches, angle1, angle2 = compute_output_values(rotation_vector, translation_vector)
+
+        print('Is this correct? -->', inches / 12, angle1, angle2)
+
     # display the colour mask image to screen
     cv2.imshow('This is Task G', cv2.resize(mskColor, tupNewImageSize))
-    cv2.imshow('This is Task G Excluded', cv2.resize(mskExcluded, tupNewImageSize))
+    #cv2.imshow('This is Task G Excluded', cv2.resize(mskExcluded, tupNewImageSize))
 
     # wait for user input to move or close
     while(True):
         ke = cv2.waitKeyEx(0)
+        #print('you pressed ',ke, intCounter)
         if ke == 113 or ke == 27:
             flgExit = True
             break
@@ -181,6 +221,10 @@ while not(flgExit):
             if intCounter > len(arrImageFiles) - 1:
                 intCounter = 0
             break
+
+    # if staying in loop then clean the windows we want to re-use
+    cv2.destroyWindow('This is Task G')
+    cv2.destroyWindow('This is Task G Excluded')
 
 # cleanup and exit
 cv2.destroyAllWindows()

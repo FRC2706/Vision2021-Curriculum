@@ -20,7 +20,7 @@ def filterDiamondsIn(bgrImage, mskImage, contours):
     (height, width, _) = bgrImage.shape
     
     # create array to store contours filtered
-    squareContours = []
+    diamondContours = []
 
     intCounter = 0
     # loop though all the contours
@@ -34,7 +34,7 @@ def filterDiamondsIn(bgrImage, mskImage, contours):
         arextent = area / (arw * arh)
 
         if arextent > 0.95 and (0.45 < brextent < 0.55): 
-            squareContours.append(indiv)
+            diamondContours.append(indiv)
             #print(f'contour area={area}, width={brw}, height={brh}, brarea={brw*brh}')
             #print('indiv=', intCounter, 'brextent=', brextent)
             #print(f'contour area={area}, width={arw}, height={arh}, brarea={arw*arh}')
@@ -43,11 +43,11 @@ def filterDiamondsIn(bgrImage, mskImage, contours):
         intCounter += 1
 
     # draw the outline of the filtered contours on the color mask
-    cv2.drawContours(bgrImage, squareContours, -1, colBgrOrange, 2)
+    cv2.drawContours(bgrImage, diamondContours, -1, colBgrOrange, 2)
 
     # create a new mask with only the desired contours
     mskBinarySquares = np.zeros(shape=[height, width, 1], dtype=np.uint8)
-    cv2.drawContours(mskBinarySquares, squareContours, -1, 255, -1)
+    cv2.drawContours(mskBinarySquares, diamondContours, -1, 255, -1)
 
     # create a full color mask
     # Bitwise-AND binary mask and original image
@@ -57,10 +57,10 @@ def filterDiamondsIn(bgrImage, mskImage, contours):
     #sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=True)
 
     # sort contours by area increasing
-    sortedContours = sorted(squareContours, key=lambda x: cv2.contourArea(x), reverse=False)
+    sortedContours = sorted(diamondContours, key=lambda x: cv2.contourArea(x), reverse=False)
 
     # sort contours by leftmost
-    sortedContours = sorted(squareContours, key=lambda x: tuple(x[x[:,:,0].argmin()][0])[0], reverse=False)
+    sortedContours = sorted(diamondContours, key=lambda x: tuple(x[x[:,:,0].argmin()][0])[0], reverse=False)
 
     indiv = sortedContours[0]
 
