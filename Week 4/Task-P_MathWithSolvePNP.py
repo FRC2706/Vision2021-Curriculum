@@ -193,12 +193,14 @@ while not(flgExit):
         # fill found corners with the most data set found in the image
         found_corners = np.array([leftmost, topmost, rightmost, bottommost], dtype="double")
 
-        #
+        # use SolvePNP to produce the result vectors
         (success, rotation_vector, translation_vector) = cv2.solvePnP(real_world_coordinates, found_corners, camera_matrix, dist_coeffs)
 
-        inches, angle1, angle2 = compute_output_values(rotation_vector, translation_vector)
-
-        print('Is this correct? -->', inches / 12, angle1, angle2)
+        if success:
+            inches, angle1, angle2 = compute_output_values(rotation_vector, translation_vector)
+            print('Is this correct? -->', inches / 12, angle1, angle2)
+        else:
+            print('nothing was measured')
 
     # display the colour mask image to screen
     cv2.imshow('This is Task G', cv2.resize(mskColor, tupNewImageSize))
