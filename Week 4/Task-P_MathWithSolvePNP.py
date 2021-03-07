@@ -64,7 +64,7 @@ camera_matrix, dist_coeffs = load_camera_details(52)
 print('camera ->',camera_matrix, dist_coeffs)
 
 # distance from center to tip in four directions
-diamond_distance = 12
+diamond_distance = 7.14
 
 # this is setting up the target for SolvePNP
 real_world_coordinates = np.array([
