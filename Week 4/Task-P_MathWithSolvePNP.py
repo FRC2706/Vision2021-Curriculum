@@ -69,9 +69,9 @@ diamond_distance = 7.14
 # this is setting up the target for SolvePNP
 real_world_coordinates = np.array([
     [-diamond_distance, 0.0, 0.0],
-    [0.0, diamond_distance, 0.0],
-    [+diamond_distance, 0.0, 0.0],
     [0.0, -diamond_distance, 0.0],
+    [+diamond_distance, 0.0, 0.0],
+    [0.0, +diamond_distance, 0.0],
 ])
 
 # define a string variable for the path to the file
