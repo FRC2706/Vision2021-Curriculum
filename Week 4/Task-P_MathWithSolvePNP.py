@@ -203,8 +203,8 @@ while not(flgExit):
             print('nothing was measured')
 
     # display the colour mask image to screen
-    cv2.imshow('This is Task G', cv2.resize(mskColor, tupNewImageSize))
-    #cv2.imshow('This is Task G Excluded', cv2.resize(mskExcluded, tupNewImageSize))
+    cv2.imshow('This is Task P', cv2.resize(mskColor, tupNewImageSize))
+    #cv2.imshow('This is Task P Excluded', cv2.resize(mskExcluded, tupNewImageSize))
 
     # wait for user input to move or close
     while(True):
