@@ -46,8 +46,8 @@ if booChooser:
     colHsvLowerRange = (24, 100, 178) # yellow
     colHsvUpperRange = (36, 255, 255) # yellow
 else:
-    colHsvLowerRange = (50, 100, 100) # green ## BC put back to green
-    colHsvUpperRange = (90, 255, 255) # green 
+    colHsvLowerRange = (0, 100, 100) # green ## BC put back to green
+    colHsvUpperRange = (8, 255, 255) # green 
 
 # fonts for displaying text
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -56,7 +56,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 if booChooser:
     strPathName = '2018-MergeAtWorlds/'
 else:
-    strPathName = '2021-targetAtDistances/' ## BC put back to tape not cones
+    strPathName = '2021-conesAsMarkers/' ## BC put back to tape not cones
 
 # define an array with the names of images 
 arrImageFiles = []
@@ -70,7 +70,7 @@ if booChooser:
     arrImageFiles.append('04664_raw.png')
     arrImageFiles.append('04766_raw.png')
     arrImageFiles.append('07040_raw.png')
-else:
+elif False:
     arrImageFiles.append('2021-01-09-093425-03.png')  ## BC put back tape
     arrImageFiles.append('2021-01-09-093550-04.png')
     arrImageFiles.append('2021-01-09-093638-05.png')
@@ -80,6 +80,10 @@ else:
     arrImageFiles.append('2021-01-09-093902-09.png')
     arrImageFiles.append('2021-01-09-094009-10.png')
     arrImageFiles.append('2021-01-09-094029-11.png')
+
+else: 
+    arrImageFiles.append('pi_cam_test.jpg')
+    arrImageFiles.append('marker-01.jpg')
 
 # setup loop
 flgExit = False
@@ -127,69 +131,70 @@ while not(flgExit):
         # from this tutorial, do all the functions
         # https://docs.opencv.org/4.5.0/dd/d49/tutorial_py_contour_features.html
 
-        # 1 Moments
-        M = cv2.moments(indiv)
-        cx = int(M['m10']/M['m00'])
-        cy = int(M['m01']/M['m00'])
-
         # 2 Area
         area = cv2.contourArea(indiv)
 
-        # 3 Permiter
-        perimeter = cv2.arcLength(indiv,True)
+        if area > 1:
+            # 1 Moments
+            M = cv2.moments(indiv)
+            cx = int(M['m10']/M['m00'])
+            cy = int(M['m01']/M['m00'])
 
-        # 4 Approx
-        epsilon = 0.1*cv2.arcLength(indiv,True)
-        approx = cv2.approxPolyDP(indiv,epsilon,True)
+            # 3 Permiter
+            perimeter = cv2.arcLength(indiv,True)
 
-        # 5 Convex Hull
-        hull = cv2.convexHull(indiv)
+            # 4 Approx
+            epsilon = 0.1*cv2.arcLength(indiv,True)
+            approx = cv2.approxPolyDP(indiv,epsilon,True)
 
-        # 6 Convexity
-        convflag = cv2.isContourConvex(indiv)
+            # 5 Convex Hull
+            hull = cv2.convexHull(indiv)
 
-        # 7a Bounding Rectangle
-        brx, bry, brw, brh = cv2.boundingRect(indiv)
+            # 6 Convexity
+            convflag = cv2.isContourConvex(indiv)
 
-        # 7b Minimum Area Recctange
-        rect = cv2.minAreaRect(indiv)
+            # 7a Bounding Rectangle
+            brx, bry, brw, brh = cv2.boundingRect(indiv)
 
-        # 8 Minimum Enclosing Circle
-        (mecx, mecy), radius = cv2.minEnclosingCircle(indiv)
-        
-        # 9 Fit Elipse
-        ellipse = cv2.fitEllipse(indiv)
+            # 7b Minimum Area Recctange
+            rect = cv2.minAreaRect(indiv)
 
-        # 10 Fit Line
-        [vx,vy,flx,fly] = cv2.fitLine(indiv, cv2.DIST_L2,0,0.01,0.01)
-        print(vx,vy,flx,fly)
+            # 8 Minimum Enclosing Circle
+            (mecx, mecy), radius = cv2.minEnclosingCircle(indiv)
+            
+            # 9 Fit Elipse
+            ellipse = cv2.fitEllipse(indiv)
 
-        # draw circle at centroid of target on colour mask, and known distance to target as text
-        cv2.circle(mskColor, (cx,cy), 4, colBgrPurple, -1)
+            # 10 Fit Line
+            [vx,vy,flx,fly] = cv2.fitLine(indiv, cv2.DIST_L2,0,0.01,0.01)
+            print(vx,vy,flx,fly)
 
-        # draw bounding rectangle
-        cv2.rectangle(mskColor,(brx,bry),(brx+brw,bry+brh),colBgrOrange,2)
+            # draw circle at centroid of target on colour mask, and known distance to target as text
+            cv2.circle(mskColor, (cx,cy), 4, colBgrPurple, -1)
 
-        # draw min area recatangle
-        box = cv2.boxPoints(rect)
-        box = np.int0(box)
-        cv2.drawContours(mskColor,[box],0,colBgrBlue,2)
+            # draw bounding rectangle
+            cv2.rectangle(mskColor,(brx,bry),(brx+brw,bry+brh),colBgrOrange,2)
 
-        # draw the min eclosing circle
-        center = (int(mecx),int(mecy))
-        radius = int(radius)
-        cv2.circle(mskColor,center,radius,colBgrCerise,2)
+            # draw min area recatangle
+            box = cv2.boxPoints(rect)
+            box = np.int0(box)
+            cv2.drawContours(mskColor,[box],0,colBgrBlue,2)
 
-        # draw the ellipse
-        cv2.ellipse(mskColor,ellipse,colBgrGrey,2)
+            # draw the min eclosing circle
+            center = (int(mecx),int(mecy))
+            radius = int(radius)
+            cv2.circle(mskColor,center,radius,colBgrCerise,2)
 
-        # display fit line
-        rows, cols = hsvOriginal.shape[:2]
-        lefty = int((-flx*vy/vx) + fly)
-        righty = int(((cols-flx)*vy/vx)+fly)
-        print(lefty,righty)
-        print((cols-1,righty),(0,lefty))
-        cv2.line(mskBinary,(cols-1,righty),(0,lefty),colBgrWhite,2)
+            # draw the ellipse
+            cv2.ellipse(mskColor,ellipse,colBgrGrey,2)
+
+            # display fit line
+            rows, cols = hsvOriginal.shape[:2]
+            lefty = int((-flx*vy/vx) + fly)
+            righty = int(((cols-flx)*vy/vx)+fly)
+            print(lefty,righty)
+            print((cols-1,righty),(0,lefty))
+            cv2.line(mskBinary,(cols-1,righty),(0,lefty),colBgrWhite,2)
 
     # display the colour mask image to screen
     cv2.imshow('This is Task G', cv2.resize(mskColor, tupNewImageSize))
