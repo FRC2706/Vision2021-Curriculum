@@ -22,3 +22,8 @@
 # https://makehardware.com/2016/03/29/finding-a-low-latency-webcam/
 
 # concept called binning that gets turned on or off on the camera to speed it up
+
+# Here are some links related to compensating for lag in a vision system
+# https://www.chiefdelphi.com/t/help-with-logging-gyro-data-for-vision-lag-compensation/161480
+# https://pdocs.kauailabs.com/sf2/examples/video-processing-latency-correction/
+
